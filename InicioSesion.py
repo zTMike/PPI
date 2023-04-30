@@ -218,7 +218,7 @@ class iniciodesesion(QMainWindow):
     def accion_botonMensaje(self):
         self.mensaje.close()
 
-
+#Prueba de actualizar
 
     def accion_botonCambiarclave(self):
         print("Pulso cambiar clave")
