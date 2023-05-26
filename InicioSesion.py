@@ -3,9 +3,17 @@ import sys
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QPixmap, QIcon, QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDesktopWidget, QLabel, QFormLayout, QGridLayout, \
-    QPushButton, QVBoxLayout, QHBoxLayout, QLineEdit, QAction, QToolBar, QTabWidget, QMessageBox
+    QPushButton, QVBoxLayout, QHBoxLayout, QLineEdit, QAction, QToolBar, QTabWidget, QMessageBox, QDialog, \
+    QDialogButtonBox
 from PyQt5 import QtCore
-from Menu import Menu
+
+import MenuAdmin
+import MenuBasic
+from MenuBasic import Menu
+from MenuAdmin import Menu
+from DatosUsuario import Usuarios
+from  Ayudas import Ayuda
+
 
 
 
@@ -181,47 +189,146 @@ class iniciodesesion(QMainWindow):
 
         #self.botonCambiarclave.clicked.connect(self.accion_botonCambiarclave)
 
-
-
-
-
-
-
-
-
         self.fondo.setLayout(self.formulario)
 
+
+
+        # ________________Ventana emergente___________
+        # creamos ventana de dialogo
+        self.ventanaDialogo = QDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
+
+        # asignamos tama;o a la ventana de dailogo
+
+        self.vdancho = 300
+        self.vdalto = 150
+
+        self.ventanaDialogo.resize(self.vdancho, self.vdalto)
+        # Para que las ventanas no se puedan estirar o mover
+        # Width= Ancho
+        self.ventanaDialogo.setFixedWidth(self.vdancho)
+        # Height= Alto
+        self.ventanaDialogo.setFixedHeight(self.vdalto)
+
+        # Creamos el boton aceptar
+        self.botonAceptar = QDialogButtonBox.Ok
+        self.opciones = QDialogButtonBox(self.botonAceptar)
+        self.opciones.accepted.connect(self.ventanaDialogo.accept)
+        # Establecemos titulo de la ventana
+        self.ventanaDialogo.setWindowTitle("Guardar datos")
+
+        # Configuramos que la ventana sea modal
+        self.ventanaDialogo.setWindowModality(Qt.ApplicationModal)
+
+        # Creamos layout vertical
+        self.vertical = QVBoxLayout()
+
+        # Creamos en label para los mensajes
+        self.mensaje = QLabel("")
+
+        # agregamos mensajes al vertical
+        self.vertical.addWidget(self.mensaje)
+
+        # agregamos Boton al vertical
+        self.vertical.addWidget(self.opciones)
+
+        # asigna layout a la ventana
+        self.ventanaDialogo.setLayout(self.vertical)
+
+
+
     def accion_botonIngresar (self):
+        # datos correctos
+        self.datoscorrectos = True
+        # establecemos un titulo a la ventana
+        self.ventanaDialogo.setWindowTitle("Datos Contraseña")
+
+        # validamos que se haya ingresado un documento
+        if (self.usuarioText.text() == '' and self.contraseñaText.text()== '' ):
+            self.datoscorrectos = False
+
+            self.mensaje.setText("Ingrese un usuario y contraseña")
+            self.usuarioText.setFocus()
+            self.ventanaDialogo.exec_()
+            # si estan correctos los datos
+
+        if (self.datoscorrectos):
+            # abrimos el archivo  en modo binario
+            self.file = open('Datos/Datos_usuarios.txt', 'rb')
+
+            # creamos una lista vacia
+            usuario = []
+
+            while self.file:
+                # lea el archivo y traiga los datos
+                linea = self.file.readline().decode('UTF-8')
+
+                # elimine el ; y ponga en una posicion
+                lista = linea.split(";")
+
+                # se para si ya no hay mas registros
+                if linea == '':
+                    break
 
 
+                # creamos un objeto tipo cliente llamado u
+                du = Usuarios(
+                    lista[0],
+                    lista[1],
+                    lista[2],
+                )
+                # Metemos el objeto en la lista usuario
+                usuario.append(du)
+            self.file.close()
 
-        if self.usuarioText.text()=="1"and self.contraseñaText.text()=="2":
-            self.ventana2 = Menu(self)
-            self.ventana2.show()
-            # inicio esconderse
-            self.hide()
-        else:
+            # En este punto tenemos la lista de usuario con todos los usuarios
 
-            self.mensaje = QMessageBox(self)
-            self.mensaje.setStyleSheet("border:solid; border-width:1px; border-color:black;font-weight: bold")
-            self.mensaje.setIcon(QMessageBox.Information)
-            self.mensaje.setWindowFlag(QtCore.Qt.FramelessWindowHint)
-            self.mensaje.setWindowTitle("Informacion")
-            self.mensaje.setText("Los datos ingresados son incorrectos")
-            self.mensaje.setStandardButtons(QMessageBox.Ok)
-            self.mensaje.buttonClicked.connect(self.accion_botonMensaje)
-            self.mensaje.exec_()
-            #Borrar Datas
+            # Variable para controlar si existe el documento
+            datos = False
+            #Validar tipo usuario 3 es tipo falto
+            self.tipodeusuario=3
+            for du in usuario:
+                # Comparemos el documento ingresado
+                # Si corresponde con el documento es el usuario correcto
+                if (du.usuario == self.usuarioText.text() and du.contra == self.contraseñaText.text()):
+                            print("Usuario OK")
+                            self.tipodeusuario=int(du.tipoU)
+                            print(self.tipodeusuario)
+                            datos=True
+                            break
+                            print(datos)
+
+            self.admin = int(1)
+            self.basic = int(0)
+
+
+            if self.tipodeusuario==self.admin:
+                print("Admin")
+                self.ventana2 = MenuAdmin.Menu(self)
+                self.ventana2.show()
+                Ayuda.TipoUsuario="Admin"
+                # inicio esconderse
+                self.hide()
+            elif(self.tipodeusuario==self.basic):
+                print("Basico")
+                self.ventana2 = MenuBasic.Menu(self)
+                self.ventana2.show()
+                Ayuda.TipoUsuario = "Basic"
+                # inicio esconderse
+                self.hide()
+
             self.usuarioText.setText("")
             self.contraseñaText.setText("")
 
-    def accion_botonMensaje(self):
-        self.mensaje.close()
+            print(datos)
 
-#Prueba de actualizar
+            if (datos==False):
+                self.mensaje.setText("Usuario O Contraseña incorrecto")
+                self.contraseñaText.setText("")
+                self.usuarioText.setText("")
+                self.usuarioText.setFocus()
 
-    def accion_botonCambiarclave(self):
-        print("Pulso cambiar clave")
+                # Hacemos que la ventana se vea
+                self.ventanaDialogo.exec_()
 
     def accion_barraDeHerramientas(self, option):
         #escodase ventana

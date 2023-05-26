@@ -5,18 +5,20 @@ from PyQt5.QtGui import QPixmap, QIcon, QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDesktopWidget, QLabel, QFormLayout, QGridLayout, \
     QPushButton, QVBoxLayout, QHBoxLayout, QLineEdit, QAction, QToolBar, QTabWidget, QMessageBox
 from PyQt5 import QtCore
-from Pag1 import VentanaRv
-from Pag2 import VentanaCl
-from Pag3 import VentanaRis
-from Pag4 import VentanaQr
+from PagVehiculo import VentanaRv
+from PagClientes import VentanaCl
+from PagEntrada import VentanaRi
+from PagSalida import VentanaRs
+from PagPQRS import VentanaQr
 
 
 
 
 class Menu(QMainWindow):
-    def __init__(self, parent=None):
-        super(Menu, self).__init__(parent)
+    def __init__(self, anterior):
+        super().__init__()
 
+        self.Anterior = anterior
         self.setWindowTitle("Gesto Parqueadero")
 
         self.ancho = 700
@@ -83,10 +85,14 @@ class Menu(QMainWindow):
         self.barraHerramientas.addAction(self.exp1)
 
         self.exp1 = QAction(QIcon("imagenes/minimizar.png"), "Minimizar", self)
+        self.barraHerramientas.addAction(self.exp1)
+
+        self.exp3 = QAction(QIcon("imagenes/regresar.png"), "Regresar", self)
+        self.barraHerramientas.addAction(self.exp3)
 
         self.barraHerramientas.setStyleSheet("background-color:#d9d9d9;")
 
-        self.barraHerramientas.addAction(self.exp1)
+
 
         # que la toolbar no se mueva
         self.barraHerramientas.setMovable(False)
@@ -100,7 +106,7 @@ class Menu(QMainWindow):
         self.interna.setLayout(self.formulario)
 
         self.letrero1 = QLabel()
-        self.letrero1.setText("Menú")
+        self.letrero1.setText("Menú Administrador")
 
         self.letrero1.setFont(QFont("league spartan", 29))
         self.letrero1.setAlignment(Qt.AlignCenter)
@@ -185,7 +191,7 @@ class Menu(QMainWindow):
 
     def accion_botonRegistroEntradaySalida(self):
         self.hide()
-        self.ventana2 = VentanaRis(self)
+        self.ventana2 = VentanaRs(self)
         self.ventana2.show()
 
     def accion_botonRegistrarPQRS(self):
@@ -205,6 +211,10 @@ class Menu(QMainWindow):
         if option.text() == "Minimizar":
             # crar ventana interna
             self.showMinimized()
+        if option.text() == "Regresar":
+            self.hide()
+            self.Anterior.show()
+
 
 
 

@@ -1,0 +1,2 @@
+class Ayuda():
+    TipoUsuario=""
