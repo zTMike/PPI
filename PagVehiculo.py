@@ -7,7 +7,6 @@ from PyQt5 import QtCore
 
 import Ayudas
 from DatosVehiculo import Vehiculos
-from Ayudas import Ayuda
 
 
 
@@ -335,13 +334,11 @@ class VentanaRv(QMainWindow):
         for dv in vehiculos:
             # Comparemos el documento ingresado
             # Si corresponde con el documento es el usuario correcto
-            print(dv.placa)
             if dv.placa == self.placaText.text():
                 self.mensaje.setText(f"El vehiculo {self.placaText.text()} ya se encuentra registrador")
                 self.ventanaDialogo.exec_()
                 self.datoscorrectos = False
                 self.accion_botonLimpiar()
-                print("Hola1")
                 break
 
         if self.datoscorrectos==True and(self.placaText.text() == '' or
@@ -408,7 +405,6 @@ class VentanaRv(QMainWindow):
             # recorrer el archivo linea x linea
             while self.file:
                 linea = self.file.readline().decode('UTF-8')
-                print(linea)
                 if linea == '':
                     break
 
@@ -541,9 +537,21 @@ class VentanaRv(QMainWindow):
         if option.text() == "Regresar":
             self.hide()
             self.vetanaAnterior.show()
-
-
-
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.hide()
+            self.vetanaAnterior.show()
+        if event.key() == Qt.Key_F1:
+            self.accion_botonGuardar()
+        if event.key() == Qt.Key_F2:
+            self.accion_botonConsultar()
+        if event.key() == Qt.Key_F3:
+            self.accion_botonLimpiar()
+        if Ayudas.Ayuda.TipoUsuario=="Admin":
+            if event.key() == Qt.Key_F4:
+                self.accion_botonActualizar()
+            if event.key() == Qt.Key_F5:
+                self.accion_botonEliminar()
 
 
 

@@ -10,6 +10,8 @@ from PagClientes import VentanaCl
 from PagEntrada import VentanaRi
 from PagSalida import VentanaRs
 from PagPQRS import VentanaQr
+from PagConsultaIngresos import VentanaCI
+
 
 
 
@@ -92,8 +94,6 @@ class Menu(QMainWindow):
 
         self.barraHerramientas.setStyleSheet("background-color:#d9d9d9;")
 
-
-
         # que la toolbar no se mueva
         self.barraHerramientas.setMovable(False)
         # Direccion de un layout izqueirda o derecha
@@ -125,12 +125,13 @@ class Menu(QMainWindow):
             "background: rgba(76, 175, 80, 0.0); opacity:0.6; color:black; margin-bottom:30px;font-weight: bold")
         self.formulario.addRow(self.letrero2)
 
-        # Caja de modulos #1
+
         #texto antes de boton Creado 1 vez
         self.usuario = QLabel("")
         self.usuario.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:240px;font-weight: bold")
         self.usuario.setFont(QFont("league spartan", 12))
 
+        # Caja de modulos #1
         # Boton Pestaña Registro Vehiculo
         self.botonRegistroVehiculo = QPushButton("Registro Vehículo")
         self.botonRegistroVehiculo.setFixedWidth(170)
@@ -149,19 +150,24 @@ class Menu(QMainWindow):
         self.formulario.addRow(self.usuario, self.botonRegistroClientes)
 
         # Caja de modulos #3
-
-
-        # Boton Pestaña Registro de Entrada y salida
-        self.botonRegistroEntradaySalida = QPushButton("Registro de Entrada y salida\n de vehículos")
-        self.botonRegistroEntradaySalida.setFixedWidth(170)
-        self.botonRegistroEntradaySalida.setStyleSheet("background-color:White; color:Black; padding:5px;"
+        # Boton Pestaña Registro de Entrada
+        self.botonRegistroEntrada = QPushButton("Registro de Entrada\n de vehículos")
+        self.botonRegistroEntrada.setFixedWidth(170)
+        self.botonRegistroEntrada.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-        self.formulario.addRow(self.usuario, self.botonRegistroEntradaySalida)
+        self.formulario.addRow(self.usuario, self.botonRegistroEntrada)
 
-        # Caja de modulos
+        # Caja de modulos #4
+        # Boton Pestaña Registro de Salida
+        self.botonRegistroSalida = QPushButton("Registro de salida\n de vehículos")
+        self.botonRegistroSalida.setFixedWidth(170)
+        self.botonRegistroSalida.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                                       "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
+        self.formulario.addRow(self.usuario, self.botonRegistroSalida)
 
+        # Caja de modulos #5
         # Boton Pestaña Registrar PQRS
         self.botonRegistrarPQRS = QPushButton("Registrar PQRS")
         self.botonRegistrarPQRS.setFixedWidth(170)
@@ -170,30 +176,73 @@ class Menu(QMainWindow):
 
         self.formulario.addRow(self.usuario, self.botonRegistrarPQRS)
 
+        # Caja de modulos #6
+        # Boton Pestaña ver ingresos
+        self.botonConsultarI = QPushButton("Consultar Ingresos")
+        self.botonConsultarI.setFixedWidth(170)
+        self.botonConsultarI.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                              "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+
+        self.formulario.addRow(self.usuario, self.botonConsultarI)
+
+
+
+
         self.botonRegistroVehiculo.clicked.connect(self.accion_botonRegistroVehiculo)
         self.botonRegistroClientes.clicked.connect(self.accion_botonRegistroClientes)
-        self.botonRegistroEntradaySalida.clicked.connect(self.accion_botonRegistroEntradaySalida)
+        self.botonRegistroEntrada.clicked.connect(self.accion_botonRegistroEntrada)
+        self.botonRegistroSalida.clicked.connect(self.accion_botonRegistroSalida)
         self.botonRegistrarPQRS.clicked.connect(self.accion_botonRegistrarPQRS)
-
+        self.botonConsultarI.clicked.connect(self.accion_botonConsultarI)
 
 
         self.fondo.setLayout(self.formulario)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_F1:
+            self.accion_botonRegistroVehiculo()
+        if event.key() == Qt.Key_F2:
+            self.accion_botonRegistroClientes()
+        if event.key() == Qt.Key_F3:
+            self.accion_botonRegistroEntrada()
+        if event.key() == Qt.Key_F4:
+            self.accion_botonRegistroSalida()
+        if event.key() == Qt.Key_F5:
+            self.accion_botonRegistrarPQRS()
+        if event.key() == Qt.Key_F6:
+            self.accion_botonConsultarI()
+        if event.key() == Qt.Key_Escape:
+            self.accion_botonVolver()
+    def accion_botonConsultarI(self):
+        self.hide()
+        self.ventana2 = VentanaCI(self)
+        self.ventana2.show()
+
+    def accion_botonVolver(self):
+        self.hide()
+        self.Anterior.show()
 
     def accion_botonRegistroVehiculo(self):
         self.hide()
         self.ventana2 = VentanaRv(self)
         self.ventana2.show()
-
+    def accion_botonRegistroSalida(self):
+        self.hide()
+        self.ventana2 = VentanaRv(self)
+        self.ventana2.show()
     def accion_botonRegistroClientes(self):
         self.hide()
         self.ventana2 = VentanaCl(self)
         self.ventana2.show()
+    def accion_botonRegistroEntrada(self):
+        self.hide()
+        self.ventana2 = VentanaRi(self)
+        self.ventana2.show()
 
-    def accion_botonRegistroEntradaySalida(self):
+    def accion_botonRegistroSalida(self):
         self.hide()
         self.ventana2 = VentanaRs(self)
         self.ventana2.show()
-
     def accion_botonRegistrarPQRS(self):
         self.hide()
         self.ventana2 = VentanaQr(self)
@@ -211,6 +260,7 @@ class Menu(QMainWindow):
         if option.text() == "Minimizar":
             # crar ventana interna
             self.showMinimized()
+
         if option.text() == "Regresar":
             self.hide()
             self.Anterior.show()

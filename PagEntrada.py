@@ -8,6 +8,7 @@ import datetime
 from DatosEntrada import Entrada
 from DatosCliente import Clientes
 from DatosVehiculo import Vehiculos
+import Ayudas
 
 
 class VentanaRi(QMainWindow):
@@ -181,7 +182,7 @@ class VentanaRi(QMainWindow):
         self.fechaText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                       "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
         self.fechaText.setInputMask("99/99/9999")  # para mostrar las barras "/"
-        self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))  # para mostrar la fecha actual
+        self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
 
         self.fechaText.setReadOnly(True)
         self.formulario.addRow(self.fecha, self.fechaText)
@@ -661,7 +662,7 @@ class VentanaRi(QMainWindow):
                     self.cedulaText.setText("")
                     self.placaText.setText("")
                     self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
-                    self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))
+                    self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
                     self.celdaText.setText("")
 
 
@@ -684,7 +685,7 @@ class VentanaRi(QMainWindow):
                 self.cedulaText.setText("")
                 self.placaText.setText("")
                 self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
-                self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))
+                self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
                 self.celdaText.setText("")
                 # Hacemos que la ventana se vea
                 self.ventanaDialogo.exec_()
@@ -698,7 +699,7 @@ class VentanaRi(QMainWindow):
         self.cedulaText.setText("")
         self.placaText.setText("")
         self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
-        self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))
+        self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
         self.celdaText.setText("")
         self.consecutivo_iniciarl()
         self.ingresoText.setReadOnly(False)
@@ -722,3 +723,18 @@ class VentanaRi(QMainWindow):
         if option.text() == "Regresar":
             self.hide()
             self.vetanaAnterior.show()
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.hide()
+            self.vetanaAnterior.show()
+        if event.key() == Qt.Key_F1:
+            self.accion_botonGuardar()
+        if event.key() == Qt.Key_F2:
+            self.accion_botonConsultar()
+        if event.key() == Qt.Key_F3:
+            self.accion_botonLimpiar()
+        if Ayudas.Ayuda.TipoUsuario=="Admin":
+            if event.key() == Qt.Key_F4:
+                self.accion_botonActualizar()
+            if event.key() == Qt.Key_F5:
+                self.accion_botonEliminar()

@@ -144,7 +144,9 @@ class iniciodesesion(QMainWindow):
 
        # ancho del campo
         self.usuarioText.setFixedWidth(170)
+        self.usuarioText.setFocus()
         self.usuarioText.setFont(QFont("league spartan", 10))
+        self.usuarioText.returnPressed.connect(self.accion_Validacionenterusuario)
         self.usuarioText.setPlaceholderText("Ingrese su usuario")
         self.usuarioText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
@@ -168,6 +170,7 @@ class iniciodesesion(QMainWindow):
         # ancho del campo
         self.contraseñaText.setFixedWidth(170)
         self.contraseñaText.setFont(QFont("league spartan", 10))
+        self.contraseñaText.returnPressed.connect(self.accion_botonIngresar)
         #agregar a formulario
         self.formulario.addRow(self.contraseña,self.contraseñaText)
 
@@ -234,7 +237,9 @@ class iniciodesesion(QMainWindow):
         # asigna layout a la ventana
         self.ventanaDialogo.setLayout(self.vertical)
 
-
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.iniciodesesion.close()
 
     def accion_botonIngresar (self):
         # datos correctos
@@ -318,6 +323,7 @@ class iniciodesesion(QMainWindow):
 
             self.usuarioText.setText("")
             self.contraseñaText.setText("")
+            self.usuarioText.setFocus()
 
             print(datos)
 
@@ -329,6 +335,17 @@ class iniciodesesion(QMainWindow):
 
                 # Hacemos que la ventana se vea
                 self.ventanaDialogo.exec_()
+    def accion_Validacionenterusuario(self):
+
+        if self.usuarioText.text() != '' and self.contraseñaText.text()== '' :
+            self.mensaje.setText("Ingrese su contraseña para continuar")
+            self.contraseñaText.setFocus()
+            self.ventanaDialogo.exec_()
+        elif self.usuarioText.text()=="" and self.contraseñaText.text()=="":
+            self.mensaje.setText("Ingrese su usuario para continuar")
+            self.usuarioText.setFocus()
+            self.ventanaDialogo.exec_()
+
 
     def accion_barraDeHerramientas(self, option):
         #escodase ventana

@@ -128,6 +128,7 @@ class VentanaRs(QMainWindow):
         self.salidaText = QLineEdit()
         self.salidaText.setFixedWidth(170)
         self.salidaText.setFont(QFont("league spartan", 10))
+        self.salidaText.returnPressed.connect(self.accion_botonConsultar)
         self.salidaText.setPlaceholderText("Número de salida")
         self.salidaText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                       "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
@@ -144,6 +145,7 @@ class VentanaRs(QMainWindow):
         self.ingresoText = QLineEdit()
         self.ingresoText.setFixedWidth(170)
         self.ingresoText.setFont(QFont("league spartan", 10))
+        self.ingresoText.returnPressed.connect(self.accion_botonConsultar)
         self.ingresoText.setPlaceholderText("Número de Ingreso")
         self.ingresoText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                        "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
@@ -257,269 +259,88 @@ class VentanaRs(QMainWindow):
                 self.consecutivo=int(ds.idsalida)
                 self.salidaText.setText(str(self.consecutivo+1))
                 self.salidaText.setReadOnly(True)
+        if self.salidaText.text()=="":
+            self.salidaText.setText("1")
 
 
 
 
     def accion_botonGuardar(self):
 
-        # datos correctos
-        self.datoscorrectos = True
+        self.mensaje.setText("Datos guardados correctamente")
+        self.ventanaDialogo.exec_()
+        # abrimos el archivo en modo agregar
+        self.file = open('Datos/Datos_Salida.txt', 'ab')
 
-        #____________VAlidar si el consecutivo ya se encuentra registrado_______
-
-        # abrimos el archivo en modo binario
-        self.file = open('Datos/Datos_Salida.txt', 'rb')
-
-        # creamos una lista vacia
-        entrada = []
-
-        while self.file:
-            # lea el archivo y traiga los datos
-            linea = self.file.readline().decode('UTF-8')
-
-            # elimine el ; y ponga en una posicion
-            lista = linea.split(";")
-
-            # se para si ya no hay mas registros
-            if linea == '':
-                break
-            # creamos un objeto tipo cliente llamado u
-            de = Salida(
-                lista[0],
-                lista[1],
-                lista[2],
-                lista[3],
-                lista[4],
-                lista[5],
-            )
-            # Metemos el objeto en la lista usuario
-            entrada.append(de)
-
+        # Traer el texto de los Qline y los concatena con ;
+        self.file.write(bytes(
+            # Cajas de texto de la pestaña
+            self.ingresoText.text() + ";"
+            + self.salidaText.text() + ";"
+            + self.cedulaText.text() + ";"
+            + self.placaText.text() + ";"
+            + self.fechaText.text() + ";"
+            + self.horaText.text() + ";"
+            + self.fechasText.text() + ";"
+            + self.horasText.text() + ";"
+            + self.celdaText.text() , encoding='UTF-8'))
         self.file.close()
 
-        # En este punto tenemos la lista de usuario con todos los usuarios
+        #_____________Ingreso______________
+        fechastr = datetime.datetime.strptime(self.fechaText.text(), '%d/%m/%Y')
+        horastr = datetime.datetime.strptime(self.horaText.text(), '%H:%M:%S').time()
 
-        # Variable para controlar si existe el documento
+        # Combine date and time into a single datetime object
+        fhingresocombinada = datetime.datetime.combine(fechastr, horastr)
 
-        for de in entrada:
-            # Comparemos el documento ingresado
-            # Si corresponde con el documento es el usuario correcto
+        # Format datetime as a string
+        fhingresocombinadastr = fhingresocombinada.strftime('%d/%m/%Y %H:%M:%S')
 
-            if de.idingreso == self.ingresoText.text():
-                self.mensaje.setText(f"El Id de ingreso {self.ingresoText.text()} ya se encuentra registrador")
-                print("Holis")
-                self.datoscorrectos = False
-                self.salidaText.setText("")
-                self.ingresoText.setText("")
-                self.ventanaDialogo.exec_()
-                break
+        print(fhingresocombinadastr)  # Output: 2022-10-01 13:45:00
+        #________Fin Ingreso____________
 
-        # Validacion si las casillas de texto estan vacias o realizado modificacion en los campos
-        if self.datoscorrectos==True and(self.ingresoText.text() == '' or
-                self.cedulaText.text() == '' or
-                self.placaText.text() == '' or
-                self.fechaText.text() == '' or
-                self.horaText.text() == '' or
-                self.celdaText.text() == ''
-        ):
-            self.datoscorrectos = False
-            # cambiamos mensaje
-            self.mensaje.setText("Debe ingresar todos los campos para guardar")
+        #_________________Salida________________
+        fechasstr = datetime.datetime.strptime(self.fechasText.text(), '%d/%m/%Y')
+        horasstr = datetime.datetime.strptime(self.horasText.text(), '%H:%M:%S').time()
 
-            self.ventanaDialogo.exec_()
+        # Combine date and time into a single datetime object
+        fhsalidacombinada = datetime.datetime.combine(fechasstr, horasstr)
 
+        # Format datetime as a string
+        fhsalidacombinadastr = fhsalidacombinada.strftime('%d/%m/%Y %H:%M:%S')
+        print(type(fhsalidacombinadastr))
+        print(fhsalidacombinadastr)  # Output: 2022-10-01 13:45:00
+        # ________Fin Salida____________
 
-        #Validar que usuario ingreso datos con espacios/ verdadero si tiene espacios/ falso si no tiene espacios
-        if self.datoscorrectos==True and(self.ingresoText.text().isspace()
-                or self.cedulaText.text().isspace()
-                or self.placaText.text().isspace()
-                or self.fechaText.text().isspace()
-                or self.horaText.text().isspace()
-                or self.celdaText.text().isspace()
-        ):
-            self.datoscorrectos = False
+        #___________Operacion_____________
 
-            self.mensaje.setText("Ha Ingresado espacios en blanco")
-            self.ventanaDialogo.exec_()
-        #Fin Validacion Espacios
+        datetime1 = datetime.datetime.strptime(fhingresocombinadastr, '%d/%m/%Y %H:%M:%S')
+        datetime2 = datetime.datetime.strptime(fhsalidacombinadastr, '%d/%m/%Y %H:%M:%S')
+
+        # Calculate time difference in hours
+        self.tiempo = int((datetime2 - datetime1).total_seconds() / 3600)
+        self.Totalngreso=self.tiempo*1500
 
 
-        #Validacion si modelo es numeros/ verdadero si son numeros/falso si son letras
-        if self.datoscorrectos==True and(self.ingresoText.text().isalpha() or
-                self.cedulaText.text().isalpha() or
-                self.placaText.text().isalpha() or
-                self.fechaText.text().isalpha() or
-                self.horaText.text().isalpha() or
-                self.celdaText.text().isalpha()
-        ):
-            self.datoscorrectos = False
 
-            self.mensaje.setText("Ha ingresado letras en los campos numericos")
-            self.ventanaDialogo.exec_()
+        # Print result
+        print(self.tiempo)  # Output: 25.583333333333332
+        print(self.Totalngreso)
 
+        self.file = open('Datos/Datos_ingresos.txt', 'ab')
 
-        # ________Validarcion cliente ya registrador__________
-        self.file = open('Datos/Datos_cliente.txt', 'rb')
-
-        # creamos una lista vacia
-        clientes = []
-
-        while self.file:
-            # lea el archivo y traiga los datos
-            linea = self.file.readline().decode('UTF-8')
-
-            # elimine el ; y ponga en una posicion
-            lista = linea.split(";")
-
-            # se para si ya no hay mas registros
-            if linea == '':
-                break
-            # creamos un objeto tipo cliente llamado u
-            dc = Clientes(
-                lista[0],
-                lista[1],
-                lista[2],
-                lista[3],
-            )
-            # Metemos el objeto en la lista usuario
-            clientes.append(dc)
-
+        # Traer el texto de los Qline y los concatena con ;
+        self.file.write(bytes(
+            # Cajas de texto de la pestaña
+            self.salidaText.text() + ";"
+            + self.cedulaText.text() + ";"
+            + self.fechasText.text() + ";"
+            + str(self.tiempo) + ";"
+            + str(self.Totalngreso) + "\n", encoding='UTF-8'))
         self.file.close()
 
-        for dc in clientes:
-        # Comparemos el documento ingresado
-        # Si corresponde con el documento es el usuario correcto
+        self.accion_botonLimpiar()
 
-            if dc.cedula==self.cedulaText.text() and self.datoscorrectos==True:
-                self.validacion=True
-                print("CD registrada")
-                break
-            else:
-                self.validacion = False
-
-
-        if self.datoscorrectos==True and self.validacion==False:
-            self.mensaje.setText("El documento del cliente no se encuentra registrado")
-            self.ventanaDialogo.exec_()
-            self.datoscorrectos=False
-
-        #____________VAlidacion si el vehiculo ya se encuentra registrado
-
-        # abrimos el archivo  en modo binario
-        self.file = open('Datos/Datos_vehiculos.txt', 'rb')
-
-        # creamos una lista vacia
-        vehiculos = []
-
-        while self.file:
-            # lea el archivo y traiga los datos
-            linea = self.file.readline().decode('UTF-8')
-
-            # elimine el ; y ponga en una posicion
-            lista = linea.split(";")
-
-            # se para si ya no hay mas registros
-            if linea == '':
-                break
-            # creamos un objeto tipo cliente llamado u
-            dv = Vehiculos(
-                lista[0],
-                lista[1],
-                lista[2],
-                lista[3],
-            )
-            # Metemos el objeto en la lista usuario
-            vehiculos.append(dv)
-
-        self.file.close()
-
-        for dv in vehiculos:
-    # Comparemos el documento ingresado
-    # Si corresponde con el documento es el usuario correcto
-            if dv.placa == self.placaText.text() and self.datoscorrectos == True:
-                self.validacion = True
-                print("Vh registrada")
-                break
-            else:
-                self.validacion = False
-
-        if self.datoscorrectos == True and self.validacion == False:
-            self.mensaje.setText("El Vehiculo no se encuentra registrado")
-            self.ventanaDialogo.exec_()
-            self.datoscorrectos = False
-
-
-
-        # ____________VAlidar si el celda ya se encuentra Ocupada_______
-
-        # abrimos el archivo en modo binario
-        self.file = open('Datos/Datos_Entrada.txt', 'rb')
-
-        # creamos una lista vacia
-        vcelda = []
-
-        while self.file:
-            # lea el archivo y traiga los datos
-            linea = self.file.readline().decode('UTF-8')
-
-            # elimine el ; y ponga en una posicion
-            lista = linea.split(";")
-
-            # se para si ya no hay mas registros
-            if linea == '':
-                break
-            # creamos un objeto tipo cliente llamado u
-            de1 = Salida(
-                lista[0],
-                lista[1],
-                lista[2],
-                lista[3],
-                lista[4],
-                lista[5],
-            )
-            # Metemos el objeto en la lista usuario
-            vcelda.append(de1)
-
-        self.file.close()
-
-        # En este punto tenemos la lista de usuario con todos los usuarios
-
-        # Variable para controlar si existe el documento
-
-        for de1 in vcelda:
-            if self.datoscorrectos==True:
-                self.txtcelda=str(int(de1.celda))
-                if self.txtcelda==self.celdaText.text():
-                    self.mensaje.setText(f"La celda {self.celdaText.text()} Ya se encuentra en uso")
-                    self.ventanaDialogo.exec_()
-                    self.datoscorrectos = False
-
-
-        # si todo esta ok guarda los datos
-        if self.datoscorrectos:
-
-            self.mensaje.setText("Datos guardados correctamente")
-
-            self.ventanaDialogo.exec_()
-            # abrimos el archivo en modo agregar
-            self.file = open('Datos/Datos_Salida.txt', 'ab')
-
-            # Traer el texto de los Qline y los concatena con ;
-            self.file.write(bytes(
-                #Cajas de texto de la pestaña
-                self.ingresoText.text() + ";"
-                + self.cedulaText.text() + ";"
-                + self.placaText.text() + ";"
-                + self.fechaText.text() + ";"
-                + self.horaText.text() + ";"
-                + self.celdaText.text()+ "\n", encoding='UTF-8'))
-            self.file.close()
-
-
-
-            self.file.close()
-            self.accion_botonLimpiar()
 
     def accion_botonConsultar(self):
 
@@ -550,18 +371,10 @@ class VentanaRs(QMainWindow):
                 self.ingresoText.setText("")
                 self.salidaText.setText("")
                 self.ventanaDialogo.exec_()
-
-
             # si estan correctos los datos
-
         if (self.datoscorrectos):
-
-
             if (self.ingresoText!=''):# abrimos el archivo en modo binario
-
-
                 self.file = open('Datos/Datos_Salida.txt', 'rb')
-
                 # creamos una lista vacia
                 salida = []
 
@@ -604,11 +417,7 @@ class VentanaRs(QMainWindow):
                         self.mensaje.setText(f"El ID de ingreso {self.ingresoText.text()} Ya fue registrado")
                         registrado=True
                         self.ventanaDialogo.exec_()
-
-
-
-
-
+                        self.ingresoText.setFocus()
                 if registrado==False:
                     # abrimos el archivo en modo binario
                     self.file = open('Datos/Datos_Entrada.txt', 'rb')
@@ -704,7 +513,7 @@ class VentanaRs(QMainWindow):
                             self.fechaText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
                             self.fechaText.setInputMask("99/99/9999")  # para mostrar las barras "/"
-                            self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))  # para mostrar la fecha actual
+                            self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
                             self.formulario.addRow(self.fecha, self.fechaText)
 
                             # Caja de modulos #5
@@ -738,7 +547,7 @@ class VentanaRs(QMainWindow):
                             self.fechasText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                                           "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
                             self.fechasText.setInputMask("99/99/9999")  # para mostrar las barras "/"
-                            self.fechasText.setText(datetime.date.today().strftime("%m/%d/%Y"))  # para mostrar la fecha actual
+                            self.fechasText.setText(datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
                             self.formulario.addRow(self.fechas, self.fechasText)
 
                             # Caja de modulos #7
@@ -798,15 +607,14 @@ class VentanaRs(QMainWindow):
                             self.cedulaText.setText("")
                             self.placaText.setText("")
                             self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
-                            self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))
+                            self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
                             self.celdaText.setText("")
-                            # Mostramos las preguntas en el formulario
+
                             self.cedulaText.setText(de.documento)
                             self.placaText.setText(de.placa)
                             self.horaText.setText(de.hora)
                             self.fechaText.setText(de.fecha)
                             self.celdaText.setText(de.celda)
-                            # indicamos que encontramos el documento
                             idingreso = True
                             self.celdaText.setReadOnly(True)
                             self.cedulaText.setReadOnly(True)
@@ -936,7 +744,7 @@ class VentanaRs(QMainWindow):
                                                      "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
                         self.fechaText.setInputMask("99/99/9999")  # para mostrar las barras "/"
                         self.fechaText.setText(
-                            datetime.date.today().strftime("%m/%d/%Y"))  # para mostrar la fecha actual
+                            datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
                         self.formulario.addRow(self.fecha, self.fechaText)
 
                         # Caja de modulos #5
@@ -973,7 +781,7 @@ class VentanaRs(QMainWindow):
                                                       "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
                         self.fechasText.setInputMask("99/99/9999")  # para mostrar las barras "/"
                         self.fechasText.setText(
-                            datetime.date.today().strftime("%m/%d/%Y"))  # para mostrar la fecha actual
+                            datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
                         self.formulario.addRow(self.fechas, self.fechasText)
 
                         # Caja de modulos #7
@@ -1036,9 +844,9 @@ class VentanaRs(QMainWindow):
                         self.cedulaText.setText("")
                         self.placaText.setText("")
                         self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
-                        self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))
+                        self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
                         self.horasText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
-                        self.fechasText.setText(datetime.date.today().strftime("%m/%d/%Y"))
+                        self.fechasText.setText(datetime.date.today().strftime("%d/%m/%Y"))
                         self.celdaText.setText("")
                         # Mostramos las preguntas en el formulario
                         self.ingresoText.setText(ds.identrada)
@@ -1068,17 +876,16 @@ class VentanaRs(QMainWindow):
                     self.salidaText.setText("")
                     # Hacemos que la ventana se vea
                     self.ventanaDialogo.exec_()
-
     def accion_botonLimpiar(self):
         self.ingresoText.setText("")
         self.salidaText.setText("")
         self.cedulaText.setText("")
         self.placaText.setText("")
         self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
-        self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))
+        self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
         self.celdaText.setText("")
         self.horasText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
-        self.fechasText.setText(datetime.date.today().strftime("%m/%d/%Y"))
+        self.fechasText.setText(datetime.date.today().strftime("%d/%m/%Y"))
         self.botonLimpiar.deleteLater()
         self.botonGuardar.deleteLater()
         self.ingresoText.deleteLater()
@@ -1129,10 +936,6 @@ class VentanaRs(QMainWindow):
 
 
         self.botonConsultar.clicked.connect(self.accion_botonConsultar)
-
-
-
-
     def accion_barraDeHerramientas(self, option):
         # escodase ventana
 
@@ -1146,5 +949,9 @@ class VentanaRs(QMainWindow):
             self.showMinimized()
 
         if option.text() == "Regresar":
+            self.hide()
+            self.vetanaAnterior.show()
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
             self.hide()
             self.vetanaAnterior.show()

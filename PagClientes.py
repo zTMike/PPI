@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDesktopWidget, 
     QDialogButtonBox
 from PyQt5 import QtCore
 from DatosCliente import Clientes
-
+import Ayudas
 
 
 
@@ -478,6 +478,7 @@ class VentanaCl(QMainWindow):
         self.celularText.setReadOnly(False)
         self.nombreText.setReadOnly(False)
         self.correoText.setReadOnly(False)
+        self.cedulaText.setFocus()
 
 
     def accion_barraDeHerramientas(self, option):
@@ -496,7 +497,21 @@ class VentanaCl(QMainWindow):
             self.hide()
             self.vetanaAnterior.show()
 
-
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.hide()
+            self.vetanaAnterior.show()
+        if event.key() == Qt.Key_F1:
+            self.accion_botonGuardar()
+        if event.key() == Qt.Key_F2:
+            self.accion_botonConsultar()
+        if event.key() == Qt.Key_F3:
+            self.accion_botonLimpiar()
+        if Ayudas.Ayuda.TipoUsuario=="Admin":
+            if event.key() == Qt.Key_F4:
+                self.accion_botonActualizar()
+            if event.key() == Qt.Key_F5:
+                self.accion_botonEliminar()
 
 
 

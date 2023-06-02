@@ -8,7 +8,7 @@ import datetime
 from DatosPQRS import PQRS
 from DatosCliente import Clientes
 from DatosVehiculo import Vehiculos
-
+import Ayudas
 
 
 class VentanaQr(QMainWindow):
@@ -191,7 +191,7 @@ class VentanaQr(QMainWindow):
         self.fechaText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                           "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
         self.fechaText.setInputMask("99/99/9999")  # para mostrar las barras "/"
-        self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))  # para mostrar la fecha actual
+        self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
         self.fechaText.setReadOnly(True)
 
         self.formulario.addRow(self.fecha, self.fechaText)
@@ -251,7 +251,7 @@ class VentanaQr(QMainWindow):
         self.fechacierreText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                             "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
         self.fechacierreText.setInputMask("99/99/9999")  # para mostrar las barras "/"
-        self.fechacierreText.setText(datetime.date.today().strftime("%m/%d/%Y"))  # para mostrar la fecha actual
+        self.fechacierreText.setText(datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
         self.fechacierreText.setReadOnly(True)
 
         self.formulario.addRow(self.fechacierre, self.fechacierreText)
@@ -384,10 +384,10 @@ class VentanaQr(QMainWindow):
         self.idpqrsText.setText("")
         self.cedulaText.setText("")
         self.placaText.setText("")
-        self.estadoText.currentText()
-        self.fechacierreText.setText(datetime.date.today().strftime("%m/%d/%Y"))  # para mostrar la fecha actual
+        self.estadoText.setCurrentIndex(0)
+        self.fechacierreText.setText(datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
         self.descripcionrText.setText("")
-        self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))  # para mostrar la fecha actual
+        self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
         self.consecutivo_iniciarl()
         self.idpqrsText.setReadOnly(False)
         self.cedulaText.setReadOnly(False)
@@ -395,6 +395,7 @@ class VentanaQr(QMainWindow):
         self.fechacierreText.setReadOnly(False)
         self.descripcionrText.setReadOnly(False)
         self.fechaText.setReadOnly(False)
+
 
     def accion_botonGuardar(self):
 
@@ -446,7 +447,7 @@ class VentanaQr(QMainWindow):
                 self.datoscorrectos = False
                 self.accion_botonlimpiar()
                 break
-                
+
         print("Inicia Validacion si los campos estan vacios")
         # Validacion si las casillas de texto estan vacias o realizado modificacion en los campos
         if self.datoscorrectos == True and (self.idpqrsText.text() == '' or
@@ -672,10 +673,10 @@ class VentanaQr(QMainWindow):
                     # limpiamos las cajas de texto
                     self.cedulaText.setText("")
                     self.placaText.setText("")
-                    self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))
+                    self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
                     self.estadoText.currentText()
                     self.descripcionrText.setText("")
-                    self.fechacierreText.setText(datetime.date.today().strftime("%m/%d/%Y"))
+                    self.fechacierreText.setText(datetime.date.today().strftime("%d/%m/%Y"))
 
                     # Mostramos las preguntas en el formulario
                     self.cedulaText.setText(dp.documento)
@@ -699,17 +700,12 @@ class VentanaQr(QMainWindow):
                     self.fechaText.setReadOnly(True)
                     self.fechacierreText.setReadOnly(True)
                     self.estadoText.setEnabled(False)
-
-
                     # Rompemos el for
                     break
+
             if (not idpqrs):
-                self.mensaje.setText(f"El ID de ingreso{self.ingresoText.text()} \nNo ha sido registrado")
-                self.cedulaText.setText("")
-                self.placaText.setText("")
-                self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
-                self.fechaText.setText(datetime.date.today().strftime("%m/%d/%Y"))
-                self.celdaText.setText("")
+                self.mensaje.setText(f"El ID de ingreso{self.idpqrsText.text()} \nNo ha sido registrado")
+                self.accion_botonlimpiar()
                 # Hacemos que la ventana se vea
                 self.ventanaDialogo.exec_()
 
@@ -728,7 +724,21 @@ class VentanaQr(QMainWindow):
         if option.text() == "Regresar":
             self.hide()
             self.vetanaAnterior.show()
-
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.hide()
+            self.vetanaAnterior.show()
+        if event.key() == Qt.Key_F1:
+            self.accion_botonGuardar()
+        if event.key() == Qt.Key_F2:
+            self.accion_botonConsultar()
+        if event.key() == Qt.Key_F3:
+            self.accion_botonlimpiar()
+        if Ayudas.Ayuda.TipoUsuario=="Admin":
+            if event.key() == Qt.Key_F4:
+                self.accion_botonActualizar()
+            if event.key() == Qt.Key_F5:
+                self.accion_botonEliminar()
 
 
 

@@ -190,6 +190,20 @@ class Menu(QMainWindow):
 
         self.fondo.setLayout(self.formulario)
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_F1:
+            self.accion_botonRegistroVehiculo()
+        if event.key() == Qt.Key_F2:
+            self.accion_botonRegistroClientes()
+        if event.key() == Qt.Key_F3:
+            self.accion_botonRegistroEntrada()
+        if event.key() == Qt.Key_F4:
+            self.accion_botonRegistroSalida()
+        if event.key() == Qt.Key_F5:
+            self.accion_botonRegistrarPQRS()
+        if event.key() == Qt.Key_Escape:
+            self.accion_botonVolver()
+
     def accion_botonVolver(self):
         self.hide()
         self.Anterior.show()
@@ -236,6 +250,7 @@ class Menu(QMainWindow):
         if option.text() == "Regresar":
             self.hide()
             self.Anterior.show()
+
 
 
 
