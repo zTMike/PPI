@@ -202,14 +202,15 @@ class VentanaRv(QMainWindow):
         self.botonConsultar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-        self.botonLimpiar = QPushButton("Limpiar")
-        self.botonLimpiar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonLimpiar)
-        self.botonLimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
-                                         "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-
-
         if Ayudas.Ayuda.TipoUsuario=="Admin":
+
+            self.botonEliminar = QPushButton("Eliminar")
+            self.botonEliminar.setFixedWidth(170)
+            self.formulario.addWidget(self.botonEliminar)
+            self.botonEliminar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                             "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+
+            self.botonEliminar.clicked.connect(self.accion_botonEliminar)
 
             self.botonActualizar = QPushButton("Actualizar")
             self.botonActualizar.setFixedWidth(170)
@@ -218,18 +219,11 @@ class VentanaRv(QMainWindow):
                                             "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
             self.botonActualizar.clicked.connect(self.accion_botonActualizar)
 
-            self.botonEliminar = QPushButton("Eliminar")
-            self.botonEliminar.setFixedWidth(170)
-            self.formulario.addWidget(self.botonEliminar)
-            self.botonEliminar.setStyleSheet("background-color:White; color:Black; padding:5px;"
-                                            "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-
-            self.botonEliminar.clicked.connect(self.accion_botonEliminar)
-
-
-
-
-
+        self.botonLimpiar = QPushButton("Limpiar")
+        self.botonLimpiar.setFixedWidth(170)
+        self.formulario.addWidget(self.botonLimpiar)
+        self.botonLimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                         "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
 
         self.botonGuardar.clicked.connect(self.accion_botonGuardar)
@@ -237,8 +231,6 @@ class VentanaRv(QMainWindow):
         self.botonConsultar.clicked.connect(self.accion_botonConsultar)
 
         self.botonLimpiar.clicked.connect(self.accion_botonLimpiar)
-
-
 
         self.fondo.setLayout(self.formulario)
 
@@ -259,8 +251,6 @@ class VentanaRv(QMainWindow):
         # Height= Alto
         self.ventanaDialogo.setFixedHeight(self.vdalto)
 
-
-
         #Creamos el boton aceptar
         self.botonAceptar=QDialogButtonBox.Ok
         self.opciones=QDialogButtonBox(self.botonAceptar)
@@ -270,8 +260,7 @@ class VentanaRv(QMainWindow):
 
         #Configuramos que la ventana sea modal
         self.ventanaDialogo.setWindowModality(Qt.ApplicationModal)
-
-
+        self.ventanaDialogo.setWindowIcon(QIcon("imagenes/IconoGPP.jpeg"))
 
         #Creamos layout vertical
         self.vertical=QVBoxLayout()
@@ -290,11 +279,219 @@ class VentanaRv(QMainWindow):
         self.ventanaDialogo.setLayout(self.vertical)
 
     def accion_botonActualizar(self):
-        pass
+        self.datoscorrectos = True
 
+        if self.datoscorrectos==True and(self.placaText.text() == '' or
+                self.modeloText.text() == '' or
+                self.colorVText.text() == '' or
+                self.marcaText.text() == ''
+        ):
+            self.datoscorrectos = False
+            # cambiamos mensaje
+            self.mensaje.setText("Debe ingresar todos los campos para guardar")
+            self.ventanaDialogo.exec_()
+
+
+        #Validar que usuario ingreso datos con espacios/ verdadero si tiene espacios/ falso si no tiene espacios
+        if self.datoscorrectos==True and (self.placaText.text().isspace()
+                or self.marcaText.text().isspace()
+                or self.modeloText.text().isspace()
+                or self.colorVText.text().isspace()
+        ):
+            self.datoscorrectos = False
+            self.mensaje.setText("Ha Ingresado espacios en blanco")
+            self.ventanaDialogo.exec_()
+        #Fin Validacion Espacios
+
+        #Validacion si en marca o en color son letras / verdadero si son letras/ falso si es numero
+        if self.datoscorrectos==True and(self.marcaText.text().isdigit()or
+                self.colorVText.text().isdigit()
+        ):
+            self.datoscorrectos = False
+            self.mensaje.setText("Ha ingresador numeros en el marca o color")
+            self.ventanaDialogo.exec_()
+        #Fin Validacion Numeros
+
+
+        #Validacion si modelo es numeros/ verdadero si son numeros/falso si son letras
+        if self.datoscorrectos==True and(self.modeloText.text().isalpha()):
+            self.datoscorrectos = False
+            self.mensaje.setText("Ha ingresado letras en el modelo")
+            self.ventanaDialogo.exec_()
+
+
+        if self.datoscorrectos:
+
+            self.file = open('Datos/Datos_vehiculos.txt', 'rb')
+
+            # creamos una lista vacia
+            vehiculos = []
+
+            while self.file:
+                # lea el archivo y traiga los datos
+                linea = self.file.readline().decode('UTF-8')
+
+                # elimine el ; y ponga en una posicion
+                lista = linea.split(";")
+
+                # se para si ya no hay mas registros
+                if linea == '':
+                    break
+                # creamos un objeto tipo cliente llamado u
+                dv = Vehiculos(
+                    lista[0],
+                    lista[1],
+                    lista[2],
+                    lista[3],
+                )
+                # Metemos el objeto en la lista usuario
+                vehiculos.append(dv)
+
+            self.file.close()
+
+            existeDocumento = False
+
+            for u in vehiculos:
+
+                if  u.placa == self.placaText.text():
+                    u.modelo = self.modeloText.text()
+                    u.color = self.colorVText.text()
+                    u.marca = self.marcaText.text()
+
+                    existeDocumento = True
+                    break
+
+            if (
+                    not existeDocumento
+            ):
+                self.mensaje.setText(f"No existe Vehiculo con esa placa\n"
+                                     f"{self.placaText.text()}")
+                self.ventanaDialogo.exec_()
+
+            # Abrimos el archivo en modo agregar
+            self.file = open('Datos/Datos_vehiculos.txt', 'wb')
+
+            for u in vehiculos:
+                # trae el texto de los Qline y los concatena
+                self.file.write(bytes(u.placa + ";" +
+                                      u.modelo + ";" +
+                                      u.color + ";" +
+                                      u.marca , encoding='UTF-8'))
+            self.file.close()
+
+            if (
+                    existeDocumento
+            ):
+                self.mensaje.setText("Vehiculo actualizado correctamente!")
+                self.ventanaDialogo.exec_()
+                self.accion_botonLimpiar()
+
+            self.file = open('Datos/Datos_vehiculos.txt', 'rb')
+            while self.file:
+                linea = self.file.readline().decode('UTF-8')
+                print(linea)
+                if linea == '':
+                    break
+            self.file.close()
     def accion_botonEliminar(self):
-        pass
+        self.datosCorrectos = True
+        self.eliminar = False
 
+        if (
+                self.placaText.text() == ''
+                or self.modeloText.text() == ''
+                or self.colorVText.text() == ''
+                or self.marcaText.text() == ''
+        ):
+            self.datosCorrectos = False
+            self.mensaje.setText("Debe seleccionar un vehiculo válido")
+            self.ventanaDialogo.exec_()
+
+        if self.datosCorrectos:
+
+            self.ventanaDialogo_eliminar = QDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
+
+            self.ventanaDialogo_eliminar.resize(300, 150)
+
+            self.ventanaDialogo_eliminar.setWindowModality(Qt.ApplicationModal)
+            self.ventanaDialogo_eliminar.setWindowTitle("Eliminar")
+            self.ventanaDialogo_eliminar.setWindowIcon(QIcon("imagenes/IconoGPP.jpeg"))
+
+            self.verticalEliminar = QVBoxLayout()
+
+            self.mensajeEliminar = QLabel("¿Estas seguro que desea eliminar este vehiculo?")
+
+            self.verticalEliminar.addWidget(self.mensajeEliminar)
+
+            # agregar las opciones de los bontes ok y cancel
+
+            self.opcionesEliminar = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+            self.opcionesBox = QDialogButtonBox(self.opcionesEliminar)
+
+            self.opcionesBox.accepted.connect(self.ok_opcion)
+            self.opcionesBox.rejected.connect(self.cancel_opcion)
+
+            # agergamos opcionBox
+            self.verticalEliminar.addWidget(self.opcionesBox)
+
+            self.ventanaDialogo_eliminar.setLayout(self.verticalEliminar)
+
+            self.ventanaDialogo_eliminar.exec_()
+
+            if self.eliminar:
+
+                self.file = open('Datos/Datos_vehiculos.txt', 'rb')
+
+                # creamos una lista vacia
+                vehiculos = []
+
+                while self.file:
+                    # lea el archivo y traiga los datos
+                    linea = self.file.readline().decode('UTF-8')
+
+                    # elimine el ; y ponga en una posicion
+                    lista = linea.split(";")
+
+                    # se para si ya no hay mas registros
+                    if linea == '':
+                        break
+                    # creamos un objeto tipo cliente llamado u
+                    dv = Vehiculos(
+                        lista[0],
+                        lista[1],
+                        lista[2],
+                        lista[3],
+                    )
+                    # Metemos el objeto en la lista usuario
+                    vehiculos.append(dv)
+
+                self.file.close()
+
+                existeDocumento = False
+
+                # ciclo for para remover el registro de un usuario
+                for u in vehiculos:
+
+                    if  u.placa == self.placaText.text():
+                        vehiculos.remove(u)
+                        existeDocumento = True
+                        break
+
+                self.file = open('Datos/Datos_vehiculos.txt', 'wb')
+
+                # reescribir el registro del usuario a vacio
+
+                for u in vehiculos:
+                    self.file.write(bytes(u.placa + ';'
+                                          + u.modelo + ';'
+                                          + u.color + ';'
+                                          + u.marca + '\n', encoding='UTF-8'))
+                self.file.close()
+
+                if existeDocumento:
+                    self.mensaje.setText("Vehiculo eliminado correctamente.")
+                    self.ventanaDialogo.exec_()
+                    self.accion_botonLimpiar()
     def accion_botonGuardar(self):
 
         # datos correctos
@@ -410,20 +607,6 @@ class VentanaRv(QMainWindow):
 
             self.file.close()
             self.accion_botonLimpiar()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     def accion_botonConsultar(self):
         # datos correctos
         self.datoscorrectos = True
@@ -496,6 +679,12 @@ class VentanaRv(QMainWindow):
                     self.colorVText.setReadOnly(True)
                     self.marcaText.setReadOnly(True)
                     existeplaca = True
+                    if Ayudas.Ayuda.TipoUsuario=="Admin":
+                        self.placaText.setReadOnly(False)
+                        self.modeloText.setReadOnly(False)
+                        self.colorVText.setReadOnly(False)
+                        self.marcaText.setReadOnly(False)
+
 
                     # Rompemos el for
                     break
@@ -509,8 +698,6 @@ class VentanaRv(QMainWindow):
 
                 # Hacemos que la ventana se vea
                 self.ventanaDialogo.exec_()
-
-
     def accion_botonLimpiar(self):
             self.marcaText.setText("")
             self.placaText.setText("")
@@ -521,7 +708,6 @@ class VentanaRv(QMainWindow):
             self.modeloText.setReadOnly(False)
             self.colorVText.setReadOnly(False)
             self.marcaText.setReadOnly(False)
-
     def accion_barraDeHerramientas(self, option):
         # escodase ventana
 
@@ -552,6 +738,11 @@ class VentanaRv(QMainWindow):
                 self.accion_botonActualizar()
             if event.key() == Qt.Key_F5:
                 self.accion_botonEliminar()
+    def ok_opcion(self):
+        self.ventanaDialogo_eliminar.close()
+        self.eliminar = True
+    def cancel_opcion(self):
+        self.ventanaDialogo_eliminar.close()
 
 
 

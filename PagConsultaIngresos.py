@@ -139,6 +139,7 @@ class VentanaCI(QMainWindow):
 
         #Configuramos que la ventana sea modal
         self.ventanaDialogo.setWindowModality(Qt.ApplicationModal)
+        self.ventanaDialogo.setWindowIcon(QIcon("imagenes/IconoGPP.jpeg"))
 
 
 

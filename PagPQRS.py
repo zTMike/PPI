@@ -314,6 +314,7 @@ class VentanaQr(QMainWindow):
 
         # Configuramos que la ventana sea modal
         self.ventanaDialogo.setWindowModality(Qt.ApplicationModal)
+        self.ventanaDialogo.setWindowIcon(QIcon("imagenes/IconoGPP.jpeg"))
 
         # Creamos layout vertical
         self.vertical = QVBoxLayout()
@@ -377,7 +378,8 @@ class VentanaQr(QMainWindow):
             if not dp.idpqrs =='':
                 self.consecutivo=int(dp.idpqrs)
                 self.idpqrsText.setText(str(self.consecutivo+1))
-
+        if self.idpqrsText.text()=="":
+            self.idpqrsText.setText("1")
 
 
     def accion_botonlimpiar(self):

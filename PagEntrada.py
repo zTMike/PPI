@@ -280,6 +280,7 @@ class VentanaRi(QMainWindow):
 
         # Configuramos que la ventana sea modal
         self.ventanaDialogo.setWindowModality(Qt.ApplicationModal)
+        self.ventanaDialogo.setWindowIcon(QIcon("imagenes/IconoGPP.jpeg"))
 
         # Creamos layout vertical
         self.vertical = QVBoxLayout()
@@ -340,6 +341,8 @@ class VentanaRi(QMainWindow):
             if not de.idingreso =='':
                 self.consecutivo=int(de.idingreso)
                 self.ingresoText.setText(str(self.consecutivo+1))
+        if self.ingresoText.text() == "":
+            self.ingresoText.setText("1")
 
 
 

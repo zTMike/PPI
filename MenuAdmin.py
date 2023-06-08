@@ -52,11 +52,7 @@ class Menu(QMainWindow):
         # Height= Alto
         self.setFixedHeight(self.alto)
 
-        # Para que las ventanas no se puedan estirar o mover
-        # Width= Ancho
-        self.setFixedWidth(self.ancho)
-        # Height= Alto
-        self.setFixedHeight(self.alto)
+
 
         # crear ventana interna
         self.interna = QWidget()

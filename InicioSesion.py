@@ -14,17 +14,12 @@ from MenuAdmin import Menu
 from DatosUsuario import Usuarios
 from  Ayudas import Ayuda
 
-
-
-
-
-
-
 class iniciodesesion(QMainWindow):
     def __init__(self, parent=None):
         super(iniciodesesion, self).__init__(parent)
 
         self.setWindowTitle("Gesto Parqueadero")
+        self.setWindowIcon(QIcon("imagenes/IconoGPP.jpeg"))
 
         self.ancho = 700
         self.alto = 700
@@ -221,6 +216,7 @@ class iniciodesesion(QMainWindow):
 
         # Configuramos que la ventana sea modal
         self.ventanaDialogo.setWindowModality(Qt.ApplicationModal)
+        self.ventanaDialogo.setWindowIcon(QIcon("imagenes/IconoGPP.jpeg"))
 
         # Creamos layout vertical
         self.vertical = QVBoxLayout()
