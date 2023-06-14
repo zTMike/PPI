@@ -14,6 +14,7 @@ from PagSalida import VentanaRs
 from PagPQRS import VentanaQr
 from PagConsultaIngresos import VentanaCI
 from CrearUsuario import VentanaCu
+from Balance import VentanaBl
 from Ayudas import Ayuda
 
 
@@ -192,6 +193,12 @@ class Menu(QMainWindow):
         self.botoncrearusuario.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
+        self.botonbalance = QPushButton("Balance")
+        self.botonbalance.setFixedWidth(170)
+        self.formulario.addWidget(self.botonbalance)
+        self.botonbalance.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                             "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+
         self.botoncrearusuario.clicked.connect(self.accion_botoncrearusuario)
         self.botonRegistroVehiculo.clicked.connect(self.accion_botonRegistroVehiculo)
         self.botonRegistroClientes.clicked.connect(self.accion_botonRegistroClientes)
@@ -199,6 +206,7 @@ class Menu(QMainWindow):
         self.botonRegistroSalida.clicked.connect(self.accion_botonRegistroSalida)
         self.botonRegistrarPQRS.clicked.connect(self.accion_botonRegistrarPQRS)
         self.botonConsultarI.clicked.connect(self.accion_botonConsultarI)
+        self.botonbalance.clicked.connect(self.accion_botonbalance)
 
 
         self.fondo.setLayout(self.formulario)
@@ -257,7 +265,10 @@ class Menu(QMainWindow):
         self.hide()
         self.ventana2 = VentanaCu(self)
         self.ventana2.show()
-
+    def accion_botonbalance(self):
+        self.hide()
+        self.ventana2 = VentanaBl(self)
+        self.ventana2.show()
 
     def accion_barraDeHerramientas(self, option):
         # escodase ventana

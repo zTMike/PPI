@@ -319,8 +319,8 @@ class VentanaRs(QMainWindow):
         datetime2 = datetime.datetime.strptime(fhsalidacombinadastr, '%d/%m/%Y %H:%M:%S')
 
         # Calculate time difference in hours
-        self.tiempo = int((datetime2 - datetime1).total_seconds() / 3600)
-        self.Totalngreso=self.tiempo*1500
+        self.tiempo = int((datetime2 - datetime1).total_seconds())
+        self.Totalngreso=self.tiempo*0.416
 
 
 

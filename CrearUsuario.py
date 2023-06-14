@@ -199,17 +199,35 @@ class VentanaCu(QMainWindow):
         self.botonConsultar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
+        self.botonactualizar = QPushButton("Actualizar")
+        self.botonactualizar.setFixedWidth(170)
+        self.formulario.addWidget(self.botonactualizar)
+        self.botonactualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                           "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+
+        self.botoneliminar = QPushButton("Eliminar")
+        self.botoneliminar.setFixedWidth(170)
+        self.formulario.addWidget(self.botoneliminar)
+        self.botoneliminar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                           "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+
         self.botonlimpiar = QPushButton("Limpiar")
         self.botonlimpiar.setFixedWidth(170)
         self.formulario.addWidget(self.botonlimpiar)
         self.botonlimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
+
+
+        self.botonGuardar.clicked.connect(self.accion_botonGuardar)
+
         self.botonGuardar.clicked.connect(self.accion_botonGuardar)
 
         self.botonConsultar.clicked.connect(self.accion_botonConsultar)
 
-        self.botonlimpiar.clicked.connect(self.accion_botonlimpiar)
+        self.botonactualizar.clicked.connect(self.accion_botonactualizar)
+
+        self.botoneliminar.clicked.connect(self.accion_botoneliminar)
 
 
 
@@ -282,7 +300,10 @@ class VentanaCu(QMainWindow):
         pass
     def accion_botonConsultar(self):
         pass
-
+    def accion_botonactualizar(self):
+        pass
+    def accion_botoneliminar(self):
+        pass
     def accion_barraDeHerramientas(self, option):
         # escodase ventana
 
@@ -298,21 +319,7 @@ class VentanaCu(QMainWindow):
         if option.text() == "Regresar":
             self.hide()
             self.vetanaAnterior.show()
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Escape:
-            self.hide()
-            self.vetanaAnterior.show()
-        if event.key() == Qt.Key_F1:
-            self.accion_botonGuardar()
-        if event.key() == Qt.Key_F2:
-            self.accion_botonConsultar()
-        if event.key() == Qt.Key_F3:
-            self.accion_botonlimpiar()
-        if Ayudas.Ayuda.TipoUsuario=="Admin":
-            if event.key() == Qt.Key_F4:
-                self.accion_botonActualizar()
-            if event.key() == Qt.Key_F5:
-                self.accion_botonEliminar()
+
 
 
 
