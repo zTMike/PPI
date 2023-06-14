@@ -5,12 +5,16 @@ from PyQt5.QtGui import QPixmap, QIcon, QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDesktopWidget, QLabel, QFormLayout, QGridLayout, \
     QPushButton, QVBoxLayout, QHBoxLayout, QLineEdit, QAction, QToolBar, QTabWidget, QMessageBox
 from PyQt5 import QtCore
+
+import Ayudas
 from PagVehiculo import VentanaRv
 from PagClientes import VentanaCl
 from PagEntrada import VentanaRi
 from PagSalida import VentanaRs
 from PagPQRS import VentanaQr
 from PagConsultaIngresos import VentanaCI
+from CrearUsuario import VentanaCu
+from Ayudas import Ayuda
 
 
 
@@ -182,8 +186,13 @@ class Menu(QMainWindow):
         self.formulario.addRow(self.usuario, self.botonConsultarI)
 
 
+        self.botoncrearusuario = QPushButton("Crear Usuario")
+        self.botoncrearusuario.setFixedWidth(170)
+        self.formulario.addWidget(self.botoncrearusuario)
+        self.botoncrearusuario.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                         "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-
+        self.botoncrearusuario.clicked.connect(self.accion_botoncrearusuario)
         self.botonRegistroVehiculo.clicked.connect(self.accion_botonRegistroVehiculo)
         self.botonRegistroClientes.clicked.connect(self.accion_botonRegistroClientes)
         self.botonRegistroEntrada.clicked.connect(self.accion_botonRegistroEntrada)
@@ -242,6 +251,11 @@ class Menu(QMainWindow):
     def accion_botonRegistrarPQRS(self):
         self.hide()
         self.ventana2 = VentanaQr(self)
+        self.ventana2.show()
+
+    def accion_botoncrearusuario(self):
+        self.hide()
+        self.ventana2 = VentanaCu(self)
         self.ventana2.show()
 
 
