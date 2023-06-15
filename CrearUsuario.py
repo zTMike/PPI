@@ -199,6 +199,7 @@ class VentanaCu(QMainWindow):
         self.botonConsultar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
+
         self.botonactualizar = QPushButton("Actualizar")
         self.botonactualizar.setFixedWidth(170)
         self.formulario.addWidget(self.botonactualizar)

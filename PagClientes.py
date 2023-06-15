@@ -198,6 +198,12 @@ class VentanaCl(QMainWindow):
         self.botonConsultar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
+        self.botonActualizar = QPushButton("Actualizar")
+        self.botonActualizar.setFixedWidth(170)
+        self.formulario.addWidget(self.botonActualizar)
+        self.botonActualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                           "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+
         self.botonLimpiar = QPushButton("Limpiar")
         self.botonLimpiar.setFixedWidth(170)
         self.formulario.addWidget(self.botonLimpiar)
