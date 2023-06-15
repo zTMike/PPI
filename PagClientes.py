@@ -7,8 +7,6 @@ from PyQt5 import QtCore
 from DatosCliente import Clientes
 import Ayudas
 
-
-
 class VentanaCl(QMainWindow):
     def __init__(self, anterior):
         super().__init__()
@@ -113,9 +111,6 @@ class VentanaCl(QMainWindow):
         self.letrero2.setStyleSheet("background: rgba(76, 175, 80, 0.0);color:#EFE718; margin-left:220px;text-decoration: underline ;")
         self.formulario.addRow(self.letrero2)
 
-
-
-
         # Caja de modulos #1
 
         #Texto informativo cedula
@@ -203,6 +198,14 @@ class VentanaCl(QMainWindow):
         self.formulario.addWidget(self.botonActualizar)
         self.botonActualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                            "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.botonActualizar.clicked.connect(self.accion_botonActualizar)
+
+        self.botonEliminar = QPushButton("Eliminar")
+        self.botonEliminar.setFixedWidth(170)
+        self.formulario.addWidget(self.botonEliminar)
+        self.botonEliminar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                           "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.botonEliminar.clicked.connect(self.accion_botonEliminar)
 
         self.botonLimpiar = QPushButton("Limpiar")
         self.botonLimpiar.setFixedWidth(170)
@@ -215,8 +218,6 @@ class VentanaCl(QMainWindow):
         self.botonConsultar.clicked.connect(self.accion_botonConsultar)
 
         self.botonLimpiar.clicked.connect(self.accion_botonLimpiar)
-
-
 
         self.fondo.setLayout(self.formulario)
 
@@ -387,7 +388,205 @@ class VentanaCl(QMainWindow):
 
             self.file.close()
             self.accion_botonLimpiar()
+    def accion_botonActualizar(self):
+        self.datoscorrectos = True
 
+        if self.datoscorrectos == True and (
+                self.cedula.text() == '' or
+                self.nombre.text() == '' or
+                self.celular.text() == '' or
+                self.correo.text() == ''
+        ):
+            self.datoscorrectos = False
+            # cambiamos mensaje
+            self.mensaje.setText("Debe ingresar todos los campos para guardar")
+            self.ventanaDialogo.exec_()
+
+
+        #Validar que usuario ingreso datos con espacios/ verdadero si tiene espacios/ falso si no tiene espacios
+        if self.datoscorrectos == True and (self.cedulaText.text().isspace()
+                or self.nombreText.text().isspace()
+                or self.celularText.text().isspace()
+                or self.correoText.text().isspace()
+        ):
+            self.datoscorrectos = False
+            self.mensaje.setText("Ha Ingresado espacios en blanco")
+            self.ventanaDialogo.exec_()
+        #Fin Validacion Espacios
+
+
+        #Validacion si modelo es numeros/ verdadero si son numeros/falso si son letras
+        if self.datoscorrectos == True and (self.cedulaText.text().isalpha()):
+            self.datoscorrectos = False
+            self.mensaje.setText("Ha ingresado letras en el campo de cédula")
+            self.ventanaDialogo.exec_()
+
+
+        if self.datoscorrectos:
+
+            self.file = open('Datos/Datos_cliente.txt', 'rb')
+
+            # creamos una lista vacia
+            clientes = []
+
+            while self.file:
+                # lea el archivo y traiga los datos
+                linea = self.file.readline().decode('UTF-8')
+
+                # elimine el ; y ponga en una posicion
+                lista = linea.split(";")
+
+                # se para si ya no hay mas registros
+                if linea == '':
+                    break
+                # creamos un objeto tipo cliente llamado u
+                dc = Clientes(
+                    lista[0],
+                    lista[1],
+                    lista[2],
+                    lista[3],
+                )
+                # Metemos el objeto en la lista usuario
+                clientes.append(dc)
+
+            self.file.close()
+
+            existeDocumento = False
+
+            for u in clientes:
+
+                if u.cedula == self.cedulaText.text():
+                    u.nombre = self.nombreText.text()
+                    u.celular = self.celularText.text()
+                    u.correo = self.correoText.text()
+
+                    existeDocumento = True
+                    break
+
+            if (
+                    not existeDocumento
+            ):
+                self.mensaje.setText(f"No existe cliente con ese número de cédula\n"
+                                     f"{self.cedulaText.text()}")
+                self.ventanaDialogo.exec_()
+
+            # Abrimos el archivo en modo agregar
+            self.file = open('Datos/Datos_cliente.txt', 'wb')
+
+            for u in clientes:
+                # trae el texto de los Qline y los concatena
+                self.file.write(bytes(u.cedula + ";" +
+                                      u.nombre + ";" +
+                                      u.celular + ";" +
+                                      u.correo , encoding='UTF-8'))
+            self.file.close()
+
+            if (
+                    existeDocumento
+            ):
+                self.mensaje.setText("Cliente actualizado correctamente!")
+                self.ventanaDialogo.exec_()
+                self.accion_botonLimpiar()
+
+            self.file = open('Datos/Datos_cliente.txt', 'rb')
+            while self.file:
+                linea = self.file.readline().decode('UTF-8')
+                print(linea)
+                if linea == '':
+                    break
+            self.file.close()
+    def accion_botonEliminar(self):
+        self.datosCorrectos = True
+        self.eliminar = False
+
+        if (
+                self.cedulaText.text() == ''
+        ):
+            self.datosCorrectos = False
+            self.mensaje.setText("Debe seleccionar un cliente válido")
+            self.ventanaDialogo.exec_()
+
+        if self.datosCorrectos:
+            self.ventanaDialogo_eliminar = QDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
+            self.ventanaDialogo_eliminar.resize(300, 150)
+
+            self.ventanaDialogo_eliminar.setWindowModality(Qt.ApplicationModal)
+            self.ventanaDialogo_eliminar.setWindowTitle("Eliminar")
+            self.ventanaDialogo_eliminar.setWindowIcon(QIcon("imagenes/IconoGPP.jpeg"))
+
+            self.verticalEliminar = QVBoxLayout()
+
+            self.mensajeEliminar = QLabel("¿Estas seguro que desea eliminar este cliente?")
+
+            self.verticalEliminar.addWidget(self.mensajeEliminar)
+
+            # agregar las opciones de los bontes ok y cancel
+
+            self.opcionesEliminar = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+            self.opcionesBox = QDialogButtonBox(self.opcionesEliminar)
+
+            self.opcionesBox.accepted.connect(self.ok_opcion)
+            self.opcionesBox.rejected.connect(self.cancel_opcion)
+
+            # agergamos opcionBox
+            self.verticalEliminar.addWidget(self.opcionesBox)
+
+            self.ventanaDialogo_eliminar.setLayout(self.verticalEliminar)
+
+            self.ventanaDialogo_eliminar.exec_()
+
+            if self.eliminar:
+
+                self.file = open('Datos/Datos_cliente.txt', 'rb')
+
+                # creamos una lista vacia
+                clientes = []
+
+                while self.file:
+                    # lea el archivo y traiga los datos
+                    linea = self.file.readline().decode('UTF-8')
+
+                    # elimine el ; y ponga en una posicion
+                    lista = linea.split(";")
+
+                    # se para si ya no hay mas registros
+                    if linea == '':
+                        break
+                    # creamos un objeto tipo cliente llamado u
+                    dv = Clientes(
+                        lista[0],
+                        lista[1],
+                        lista[2],
+                        lista[3],
+                    )
+                    # Metemos el objeto en la lista usuario
+                    clientes.append(dv)
+
+                self.file.close()
+
+                existeDocumento = False
+
+                # ciclo for para remover el registro de un usuario
+                for u in clientes:
+                    if u.cedula == self.cedulaText.text():
+                        clientes.remove(u)
+                        existeDocumento = True
+                        break
+
+                self.file = open('Datos/Datos_cliente.txt', 'wb')
+
+                # reescribir el registro del usuario a vacio
+                for u in clientes:
+                    self.file.write(bytes(u.cedula + ';'
+                                          + u.nombre + ';'
+                                          + u.celular + ';'
+                                          + u.correo, encoding='UTF-8'))
+                self.file.close()
+
+                if existeDocumento:
+                    self.mensaje.setText("Cliente eliminado correctamente.")
+                    self.ventanaDialogo.exec_()
+                    self.accion_botonLimpiar()
     def accion_botonMensaje(self):
         self.mensaje.close()
     def accion_botonConsultar(self):
@@ -457,9 +656,6 @@ class VentanaCl(QMainWindow):
                     # indicamos que encontramos el documento
                     existecedula = True
                     self.cedulaText.setReadOnly(True)
-                    self.celularText.setReadOnly(True)
-                    self.nombreText.setReadOnly(True)
-                    self.correoText.setReadOnly(True)
 
                     # Rompemos el for
                     break
@@ -473,21 +669,13 @@ class VentanaCl(QMainWindow):
 
                 # Hacemos que la ventana se vea
                 self.ventanaDialogo.exec_()
-
-
-
     def accion_botonLimpiar(self):
         self.cedulaText.setText("")
         self.celularText.setText("")
         self.nombreText.setText("")
         self.correoText.setText("")
         self.cedulaText.setReadOnly(False)
-        self.celularText.setReadOnly(False)
-        self.nombreText.setReadOnly(False)
-        self.correoText.setReadOnly(False)
         self.cedulaText.setFocus()
-
-
     def accion_barraDeHerramientas(self, option):
         # escodase ventana
 
@@ -519,8 +707,8 @@ class VentanaCl(QMainWindow):
                 self.accion_botonActualizar()
             if event.key() == Qt.Key_F5:
                 self.accion_botonEliminar()
-
-
-
-
-
+    def ok_opcion(self):
+        self.ventanaDialogo_eliminar.close()
+        self.eliminar = True
+    def cancel_opcion(self):
+        self.ventanaDialogo_eliminar.close()

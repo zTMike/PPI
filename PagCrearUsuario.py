@@ -5,9 +5,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDesktopWidget, 
     QDialogButtonBox, QComboBox
 from PyQt5 import QtCore
 import datetime
-from DatosPQRS import PQRS
-from DatosCliente import Clientes
-from DatosVehiculo import Vehiculos
+from DatosUsuario import Usuarios
 import Ayudas
 
 
@@ -89,7 +87,7 @@ class VentanaCu(QMainWindow):
         self.barraHerramientas.setStyleSheet("background-color:#d9d9d9;")
         # que la toolbar no se mueva
         self.barraHerramientas.setMovable(False)
-        # Direccion de un layout izqueirda o derecha
+        # Direccion de un layout izquierda o derecha
         self.barraHerramientas.setLayoutDirection(Qt.RightToLeft)
         # Activar Barra De herramientas
         self.barraHerramientas.actionTriggered[QAction].connect(self.accion_barraDeHerramientas)
@@ -100,14 +98,10 @@ class VentanaCu(QMainWindow):
 
         self.letrero1 = QLabel()
         self.letrero1.setText("Crear Usuarios\nNuevos")
-
-
         self.letrero1.setFont(QFont("league spartan", 29))
         self.letrero1.setAlignment(Qt.AlignCenter)
-
         self.letrero1.setStyleSheet("background: rgba(76, 175, 80, 0.0); font-weight: bold; margin-bottom:15px;margin-top:50px;")
         self.formulario.addRow(self.letrero1)
-
 
         #linea Pendiente intentar realizar
         self.letrero2 = QLabel()
@@ -116,73 +110,47 @@ class VentanaCu(QMainWindow):
         self.letrero2.setStyleSheet("background: rgba(76, 175, 80, 0.0);color:#EFE718; margin-left:240px;text-decoration: underline ;")
         self.formulario.addRow(self.letrero2)
 
-
-
-
-        # Caja de modulos #1
-
-        #Texto informativo Id PQRS
-        self.idpqrs = QLabel("Usuario: ")
-        self.idpqrs.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:100px;font-weight: bold;margin-top:50px;")
-        self.idpqrs.setFont(QFont("league spartan", 12))
-
-
-
+        #Texto informativo usuario
+        self.usuario = QLabel("Usuario: ")
+        self.usuario.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:100px;font-weight: bold;margin-top:50px;")
+        self.usuario.setFont(QFont("league spartan", 12))
         # Entrada de dato cedula
-        self.idpqrsText = QLineEdit()
-        self.idpqrsText.setFixedWidth(260)
-        self.idpqrsText.setFont(QFont("league spartan", 10))
-        self.idpqrsText.setPlaceholderText("Usuario")
-        self.idpqrsText.setStyleSheet("background-color:White; color:Black; padding:5px;"
+        self.usuarioText = QLineEdit()
+        self.usuarioText.setFixedWidth(260)
+        self.usuarioText.setFont(QFont("league spartan", 10))
+        self.usuarioText.setPlaceholderText("Usuario")
+        self.usuarioText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                        "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold; margin-top:50px;")
-        self.formulario.addRow(self.idpqrs, self.idpqrsText)
+        self.formulario.addRow(self.usuario, self.usuarioText)
 
-
-        # Caja de modulos #2
-
-        # Texto informativo cedula
-        self.cedula = QLabel("Contraseña: ")
-        self.cedula.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:100px;font-weight: bold")
-        self.cedula.setFont(QFont("league spartan", 12))
-
-        # Entrada de dato cedula
-        self.cedulaText = QLineEdit()
-        self.cedulaText.setFixedWidth(260)
-        self.cedulaText.setFont(QFont("league spartan", 10))
-        self.cedulaText.setPlaceholderText("Contraseña")
-        self.cedulaText.setStyleSheet("background-color:White; color:Black; padding:5px;"
+        # Texto informativo contrasena
+        self.contra = QLabel("Contraseña: ")
+        self.contra.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:100px;font-weight: bold")
+        self.contra.setFont(QFont("league spartan", 12))
+        # Entrada de dato contrasena
+        self.contraText = QLineEdit()
+        self.contraText.setFixedWidth(260)
+        self.contraText.setFont(QFont("league spartan", 10))
+        self.contraText.setPlaceholderText("Contraseña")
+        self.contraText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                       "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-        self.formulario.addRow(self.cedula, self.cedulaText)
+        self.formulario.addRow(self.contra, self.contraText)
 
-
-
-
-
-
-
-        # Caja de modulos #8
         # Texto informativo fecha Respuesta
+        self.tipoU = QLabel("Tipo de usuario: ")
+        self.tipoU.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:100px;font-weight: bold")
+        self.tipoU.setFont(QFont("league spartan", 12))
 
-        self.estado = QLabel("Tipo de usuario: ")
-        self.estado.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:100px;font-weight: bold")
-        self.estado.setFont(QFont("league spartan", 12))
-
-        # Entrada de dato Fecha respuesta
-
-        self.estadoText = QComboBox()
-        self.estadoText.addItem("Administrador")
-        self.estadoText.addItem("Basico")
-        self.estadoText.setFixedWidth(260)
-        self.estadoText.setFont(QFont("league spartan", 10))
-        self.estadoText.setPlaceholderText("Solucionado o pendiente")
-        self.estadoText.setStyleSheet("background-color:White; color:Black; padding:5px;"
+        # Entrada de dato tipo de usuario
+        self.tipoUText = QComboBox()
+        self.tipoUText.addItem("Administrador")
+        self.tipoUText.addItem("Basico")
+        self.tipoUText.setFixedWidth(260)
+        self.tipoUText.setFont(QFont("league spartan", 10))
+        self.tipoUText.setPlaceholderText("Solucionado o pendiente")
+        self.tipoUText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-        self.formulario.addRow(self.estado, self.estadoText)
-
-        # Caja de modulos #9
-        # Texto informativo estado de la pqr
-
-
+        self.formulario.addRow(self.tipoU, self.tipoUText)
 
         #Linea Separadora
         self.formulario.addRow(self.letrero2)
@@ -200,37 +168,29 @@ class VentanaCu(QMainWindow):
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
 
-        self.botonactualizar = QPushButton("Actualizar")
-        self.botonactualizar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonactualizar)
-        self.botonactualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+        self.botonActualizar = QPushButton("Actualizar")
+        self.botonActualizar.setFixedWidth(170)
+        self.formulario.addWidget(self.botonActualizar)
+        self.botonActualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                            "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-        self.botoneliminar = QPushButton("Eliminar")
-        self.botoneliminar.setFixedWidth(170)
-        self.formulario.addWidget(self.botoneliminar)
-        self.botoneliminar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+        self.botonEliminar = QPushButton("Eliminar")
+        self.botonEliminar.setFixedWidth(170)
+        self.formulario.addWidget(self.botonEliminar)
+        self.botonEliminar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                            "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-        self.botonlimpiar = QPushButton("Limpiar")
-        self.botonlimpiar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonlimpiar)
-        self.botonlimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+        self.botonLimpiar = QPushButton("Limpiar")
+        self.botonLimpiar.setFixedWidth(170)
+        self.formulario.addWidget(self.botonLimpiar)
+        self.botonLimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-
-
         self.botonGuardar.clicked.connect(self.accion_botonGuardar)
-
-        self.botonGuardar.clicked.connect(self.accion_botonGuardar)
-
         self.botonConsultar.clicked.connect(self.accion_botonConsultar)
-
-        self.botonactualizar.clicked.connect(self.accion_botonactualizar)
-
-        self.botoneliminar.clicked.connect(self.accion_botoneliminar)
-
-
+        self.botonActualizar.clicked.connect(self.accion_botonActualizar)
+        self.botonEliminar.clicked.connect(self.accion_botonEliminar)
+        self.botonLimpiar.clicked.connect(self.accion_botonlimpiar)
 
         self.fondo.setLayout(self.formulario)
 
@@ -239,7 +199,6 @@ class VentanaCu(QMainWindow):
         self.ventanaDialogo = QDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
 
         # asignamos tama;o a la ventana de dailogo
-
         self.vdancho = 300
         self.vdalto = 150
 
@@ -276,35 +235,342 @@ class VentanaCu(QMainWindow):
         # asigna layout a la ventana
         self.ventanaDialogo.setLayout(self.vertical)
 
-
-
-
-
     def accion_botonlimpiar(self):
-        """self.idpqrsText.setText("")
-        self.cedulaText.setText("")
-        self.placaText.setText("")
-        self.estadoText.setCurrentIndex(0)
-        self.fechacierreText.setText(datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
-        self.descripcionrText.setText("")
-        self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
-        self.consecutivo_iniciarl()
-        self.idpqrsText.setReadOnly(False)
-        self.cedulaText.setReadOnly(False)
-        self.placaText.setReadOnly(False)
-        self.fechacierreText.setReadOnly(False)
-        self.descripcionrText.setReadOnly(False)
-        self.fechaText.setReadOnly(False)"""
-
+        self.usuarioText.setText("")
+        self.contraText.setText("")
+        self.usuarioText.setFocus()
+        self.usuarioText.setReadOnly(False)
+        self.contraText.setReadOnly(False)
 
     def accion_botonGuardar(self):
-        pass
+        self.datoscorrectos = True
+        self.file = open('Datos/Datos_usuarios.txt', 'rb')
+
+        # creamos una lista vacia
+        usuarios = []
+
+        while self.file:
+            # lea el archivo y traiga los datos
+            linea = self.file.readline().decode('UTF-8')
+
+            # elimine el ; y ponga en una posicion
+            lista = linea.split(";")
+
+            # se para si ya no hay mas registros
+            if linea == '':
+                break
+            # creamos un objeto tipo cliente llamado u
+            du = Usuarios(
+                lista[0],
+                lista[1],
+                lista[2],
+            )
+            # Metemos el objeto en la lista usuario
+            usuarios.append(du)
+
+        self.file.close()
+
+        # En este punto tenemos la lista de usuario con todos los usuarios
+
+        # Variable para controlar si existe el documento
+
+        for du in usuarios:
+            # Comparemos el documento ingresado
+            # Si corresponde con el documento es el usuario correcto
+
+            if du.usuario == self.usuarioText.text():
+                self.mensaje.setText(f"El usuario: {self.usuarioText.text()}\nYa se encuentra registrado")
+                self.ventanaDialogo.exec_()
+                self.datoscorrectos = False
+                self.accion_botonlimpiar()
+                break
+
+        print("Inicia Validacion si los campos estan vacios")
+        # Validacion si las casillas de texto estan vacias o realizado modificacion en los campos
+        if self.datoscorrectos == True and (self.usuarioText.text() == '' or
+                                            self.contraText.text() == ''
+        ):
+            self.datoscorrectos = False
+            # cambiamos mensaje
+            self.mensaje.setText("Debe ingresar todos los campos para guardar")
+
+            self.ventanaDialogo.exec_()
+        print("Inicia Validacion si los campos tienen espacios")
+        # Validar que usuario ingreso datos con espacios/ verdadero si tiene espacios/ falso si no tiene espacios
+        if self.datoscorrectos == True and (self.usuarioText.text().isspace()
+                                            or self.contraText.text().isspace()
+        ):
+            self.datoscorrectos = False
+            self.mensaje.setText("Ha Ingresado espacios en blanco")
+            self.ventanaDialogo.exec_()
+        # Fin Validacion Espacios
+
+        if self.datoscorrectos:
+            # abrimos el archivo en modo agregar
+            self.file = open('Datos/Datos_usuarios.txt', 'ab')
+
+            # Traer el texto de los Qline y los concatena con ;
+            self.file.write(bytes(
+                # Cajas de texto de la pestaña
+                self.usuarioText.text() + ";"
+                + self.contraText.text() + ";"
+                + self.tipoUText.currentText() + "\n", encoding='UTF-8'))
+            self.file.close()
+            self.mensaje.setText("Datos guardados correctamente")
+            self.ventanaDialogo.exec_()
+            self.accion_botonlimpiar()
     def accion_botonConsultar(self):
-        pass
-    def accion_botonactualizar(self):
-        pass
-    def accion_botoneliminar(self):
-        pass
+        # datos correctos
+        self.datoscorrectos = True
+        # establecemos un titulo a la ventana
+        self.ventanaDialogo.setWindowTitle("Consultar Ingreso")
+
+        # validamos que se haya ingresado un documento
+        if (self.usuarioText.text() == ''):
+            self.datoscorrectos = False
+
+            self.mensaje.setText("Si va a consultar un usuario"
+                                 "\nDebe primero, ingresar el usuario")
+            self.ingresoText.setFocus()
+            self.accion_botonlimpiar()
+            self.ventanaDialogo.exec_()
+            # si estan correctos los datos
+
+        if (self.datoscorrectos):
+            # abrimos el archivo en modo binario
+            self.file = open('Datos/Datos_usuarios.txt', 'rb')
+
+            # creamos una lista vacia
+            usuarios = []
+
+            while self.file:
+                # lea el archivo y traiga los datos
+                linea = self.file.readline().decode('UTF-8')
+
+                # elimine el ; y ponga en una posicion
+                lista = linea.split(";")
+
+                # se para si ya no hay mas registros
+                if linea == '':
+                    break
+                # creamos un objeto tipo cliente llamado u
+                du = Usuarios(
+                    lista[0],
+                    lista[1],
+                    lista[2],
+                )
+                # Metemos el objeto en la lista usuario
+                usuarios.append(du)
+
+            self.file.close()
+
+            # En este punto tenemos la lista de usuario con todos los usuarios
+
+            # Variable para controlar si existe el documento
+            existeUsuario=False
+            for du in usuarios:
+                # Comparemos el documento ingresado
+                # Si corresponde con el documento es el usuario correcto
+                if du.usuario == self.usuarioText.text():
+                    # limpiamos las cajas de texto
+                    self.contraText.setText("")
+
+                    # Mostramos las preguntas en el formulario
+                    self.contraText.setText(du.contra)
+
+                    if du.tipoU=="Administrador":
+                        self.tipoUText.setCurrentIndex(0)
+                    elif du.tipoU=="Basico":
+                        self.tipoUText.setCurrentIndex(1)
+
+                    # indicamos que encontramos el documento
+                    existeUsuario = True
+                    self.usuarioText.setReadOnly(True)
+                    break
+
+            if (not existeUsuario):
+                self.mensaje.setText(f"El usuario {self.usuarioText.text()} \nNo ha sido registrado")
+                self.accion_botonlimpiar()
+                # Hacemos que la ventana se vea
+                self.ventanaDialogo.exec_()
+    def accion_botonActualizar(self):
+        self.datoscorrectos = True
+
+        if self.datoscorrectos == True and (
+                self.usuarioText.text() == '' or
+                self.contraText.text() == '' or
+                self.tipoUText.currentText() == ''
+        ):
+            self.datoscorrectos = False
+            # cambiamos mensaje
+            self.mensaje.setText("Debe ingresar todos los campos para guardar")
+            self.ventanaDialogo.exec_()
+
+        #Validar que usuario ingreso datos con espacios/ verdadero si tiene espacios/ falso si no tiene espacios
+        if self.datoscorrectos == True and (self.usuarioText.text().isspace()
+                or self.contraText.text().isspace()
+        ):
+            self.datoscorrectos = False
+            self.mensaje.setText("Ha Ingresado espacios en blanco")
+            self.ventanaDialogo.exec_()
+        #Fin Validacion Espacios
+
+        if self.datoscorrectos:
+
+            self.file = open('Datos/Datos_usuarios.txt', 'rb')
+            # creamos una lista vacia
+            usuarios = []
+
+            while self.file:
+                # lea el archivo y traiga los datos
+                linea = self.file.readline().decode('UTF-8')
+
+                # elimine el ; y ponga en una posicion
+                lista = linea.split(";")
+
+                # se para si ya no hay mas registros
+                if linea == '':
+                    break
+                # creamos un objeto tipo cliente llamado u
+                du = Usuarios(
+                    lista[0],
+                    lista[1],
+                    lista[2],
+                )
+                # Metemos el objeto en la lista usuario
+                usuarios.append(du)
+
+            self.file.close()
+
+            existeDocumento = False
+
+            for u in usuarios:
+
+                if u.usuario == self.usuarioText.text():
+                    u.contra = self.contraText.text()
+                    u.tipoU = self.tipoUText.currentText()
+
+                    existeDocumento = True
+                    break
+
+            if (
+                    not existeDocumento
+            ):
+                self.mensaje.setText(f"No existe usuario\n"
+                                     f"{self.cedulaText.text()}")
+                self.ventanaDialogo.exec_()
+
+            # Abrimos el archivo en modo agregar
+            self.file = open('Datos/Datos_usuarios.txt', 'wb')
+            for u in usuarios:
+                # trae el texto de los Qline y los concatena
+                self.file.write(bytes(u.usuario + ";" +
+                                      u.contra + ";" +
+                                      u.tipoU, encoding='UTF-8'))
+            self.file.close()
+
+            if existeDocumento:
+                self.mensaje.setText("Usuario actualizado correctamente!")
+                self.ventanaDialogo.exec_()
+                self.accion_botonLimpiar()
+
+            self.file = open('Datos/Datos_usuarios.txt', 'rb')
+            while self.file:
+                linea = self.file.readline().decode('UTF-8')
+                print(linea)
+                if linea == '':
+                    break
+            self.file.close()
+    def accion_botonEliminar(self):
+        self.datosCorrectos = True
+        self.eliminar = False
+
+        if (
+                self.usuarioText.text() == ''
+        ):
+            self.datosCorrectos = False
+            self.mensaje.setText("Debe seleccionar un usuario válido")
+            self.ventanaDialogo.exec_()
+
+        if self.datosCorrectos:
+            self.ventanaDialogo_eliminar = QDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
+            self.ventanaDialogo_eliminar.resize(300, 150)
+
+            self.ventanaDialogo_eliminar.setWindowModality(Qt.ApplicationModal)
+            self.ventanaDialogo_eliminar.setWindowTitle("Eliminar")
+            self.ventanaDialogo_eliminar.setWindowIcon(QIcon("imagenes/IconoGPP.jpeg"))
+
+            self.verticalEliminar = QVBoxLayout()
+
+            self.mensajeEliminar = QLabel("¿Estas seguro que desea eliminar este usuario?")
+
+            self.verticalEliminar.addWidget(self.mensajeEliminar)
+
+            # agregar las opciones de los bontes ok y cancel
+
+            self.opcionesEliminar = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+            self.opcionesBox = QDialogButtonBox(self.opcionesEliminar)
+
+            self.opcionesBox.accepted.connect(self.ok_opcion)
+            self.opcionesBox.rejected.connect(self.cancel_opcion)
+
+            # agergamos opcionBox
+            self.verticalEliminar.addWidget(self.opcionesBox)
+
+            self.ventanaDialogo_eliminar.setLayout(self.verticalEliminar)
+
+            self.ventanaDialogo_eliminar.exec_()
+
+            if self.eliminar:
+
+                self.file = open('Datos/Datos_usuarios.txt', 'rb')
+
+                # creamos una lista vacia
+                usuarios = []
+
+                while self.file:
+                    # lea el archivo y traiga los datos
+                    linea = self.file.readline().decode('UTF-8')
+
+                    # elimine el ; y ponga en una posicion
+                    lista = linea.split(";")
+
+                    # se para si ya no hay mas registros
+                    if linea == '':
+                        break
+                    # creamos un objeto tipo cliente llamado u
+                    du = Usuarios(
+                        lista[0],
+                        lista[1],
+                        lista[2],
+                    )
+                    # Metemos el objeto en la lista usuario
+                    usuarios.append(du)
+
+                self.file.close()
+
+                existeDocumento = False
+
+                # ciclo for para remover el registro de un usuario
+                for u in usuarios:
+                    if u.usuario == self.usuarioText.text():
+                        usuarios.remove(u)
+                        existeDocumento = True
+                        break
+
+                self.file = open('Datos/Datos_usuarios.txt', 'wb')
+
+                # reescribir el registro del usuario a vacio
+                for u in usuarios:
+                    self.file.write(bytes(u.usuario + ';'
+                                          + u.contra + ';'
+                                          + u.tipoU, encoding='UTF-8'))
+                self.file.close()
+
+                if existeDocumento:
+                    self.mensaje.setText("Usuario eliminado correctamente.")
+                    self.ventanaDialogo.exec_()
+                    self.accion_botonLimpiar()
     def accion_barraDeHerramientas(self, option):
         # escodase ventana
 
@@ -320,10 +586,8 @@ class VentanaCu(QMainWindow):
         if option.text() == "Regresar":
             self.hide()
             self.vetanaAnterior.show()
-
-
-
-
-
-
-
+    def ok_opcion(self):
+        self.ventanaDialogo_eliminar.close()
+        self.eliminar = True
+    def cancel_opcion(self):
+        self.ventanaDialogo_eliminar.close()

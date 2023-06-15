@@ -1,4 +1,5 @@
-Admin;Admin;1
-1;3;0
-2;3;1
-2;2;0
+Admin;Admin;Administrador
+1;3;Basico
+2;3;Administrador
+2;2;Basico
+asd1;asd5;Administrador
