@@ -5,10 +5,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDesktopWidget, 
     QDialogButtonBox, QComboBox
 from PyQt5 import QtCore
 import datetime
-from DatosPQRS import PQRS
-from DatosCliente import Clientes
-from DatosVehiculo import Vehiculos
-import Ayudas
+from DatosEgreso import Egreso
 
 
 class VentanaBl(QMainWindow):
@@ -99,7 +96,7 @@ class VentanaBl(QMainWindow):
         self.interna.setLayout(self.formulario)
 
         self.letrero1 = QLabel()
-        self.letrero1.setText("Balance")
+        self.letrero1.setText("Registro de Egreso")
 
 
         self.letrero1.setFont(QFont("league spartan", 29))
@@ -117,20 +114,18 @@ class VentanaBl(QMainWindow):
         self.formulario.addRow(self.letrero2)
 
 
-
-
         # Caja de modulos #1
 
-        #Texto informativo Id PQRS
+        #Texto informativo Id Egreso
         self.idegreso = QLabel("ID Egreso: ")
         self.idegreso.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:100px;font-weight: bold;margin-top:50px;")
         self.idegreso.setFont(QFont("league spartan", 12))
 
-        # Entrada de dato cedula
+        # Entrada de dato Egreso
         self.idegresoText = QLineEdit()
         self.idegresoText.setFixedWidth(260)
         self.idegresoText.setFont(QFont("league spartan", 10))
-        self.idegresoText.setPlaceholderText("Ingrese ID de PQRS")
+        self.idegresoText.setPlaceholderText("Ingrese ID de Egreso")
         self.idegresoText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                        "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold; margin-top:50px;")
         self.formulario.addRow(self.idegreso, self.idegresoText)
@@ -147,7 +142,7 @@ class VentanaBl(QMainWindow):
         self.fechaText = QLineEdit()
         self.fechaText.setFixedWidth(260)
         self.fechaText.setFont(QFont("league spartan", 10))
-        self.fechaText.setPlaceholderText("Ingrese Fecha de PQRS")
+        self.fechaText.setPlaceholderText("Ingrese Fecha de Egreso")
         self.fechaText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                           "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
         self.fechaText.setInputMask("99/99/9999")  # para mostrar las barras "/"
@@ -159,29 +154,29 @@ class VentanaBl(QMainWindow):
 
 
         # Caja de modulos #3
-        # Texto informativo descripción de la pqr
+        # Texto informativo descripción de la Egreso
 
         self.descripcion = QLabel("Descripcion: ")
         self.descripcion.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:100px;font-weight: bold")
         self.descripcion.setFont(QFont("league spartan", 12))
 
         # Entrada de dato descripción de la pqr
-        self.descripcionrText = QLineEdit()
-        self.descripcionrText.setFixedWidth(260)
-        self.descripcionrText.setFont(QFont("league spartan", 10))
-        self.descripcionrText.setPlaceholderText("Descripcion de lo sucedido ")
-        self.descripcionrText.setStyleSheet("background-color:White; color:Black; padding:5px;"
+        self.descripcionText = QLineEdit()
+        self.descripcionText.setFixedWidth(260)
+        self.descripcionText.setFont(QFont("league spartan", 10))
+        self.descripcionText.setPlaceholderText("Descripcion del egreso ")
+        self.descripcionText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-        self.formulario.addRow(self.descripcion, self.descripcionrText)
+        self.formulario.addRow(self.descripcion, self.descripcionText)
 
         # Caja de modulos #10
-        # Texto informativo descripción de la pqr
+        # Texto informativo Valor
 
         self.valor = QLabel("Valor: ")
         self.valor.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:100px;font-weight: bold")
         self.valor.setFont(QFont("league spartan", 12))
 
-        # Entrada de dato descripción de la pqr
+        # Entrada de dato Valor
         self.valorText = QLineEdit()
         self.valorText.setFixedWidth(260)
         self.valorText.setFont(QFont("league spartan", 10))
@@ -199,25 +194,41 @@ class VentanaBl(QMainWindow):
         self.botonGuardar.setFixedWidth(170)
         self.formulario.addWidget(self.botonGuardar)
         self.botonGuardar.setStyleSheet("background-color:White; color:Black; padding:5px;"
-                                         "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+                                        "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
         self.botonConsultar = QPushButton("Consultar")
         self.botonConsultar.setFixedWidth(170)
         self.formulario.addWidget(self.botonConsultar)
         self.botonConsultar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+
+        self.botonactualizar = QPushButton("Actualizar")
+        self.botonactualizar.setFixedWidth(170)
+        self.formulario.addWidget(self.botonactualizar)
+        self.botonactualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                           "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+
+        self.botoneliminar = QPushButton("Eliminar")
+        self.botoneliminar.setFixedWidth(170)
+        self.formulario.addWidget(self.botoneliminar)
+        self.botoneliminar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
         self.botonlimpiar = QPushButton("Limpiar")
         self.botonlimpiar.setFixedWidth(170)
         self.formulario.addWidget(self.botonlimpiar)
         self.botonlimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
-                                         "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+                                        "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+
+        self.botonlimpiar.clicked.connect(self.accion_botonlimpiar)
 
         self.botonGuardar.clicked.connect(self.accion_botonGuardar)
 
         self.botonConsultar.clicked.connect(self.accion_botonConsultar)
 
-        self.botonlimpiar.clicked.connect(self.accion_botonlimpiar)
+        self.botonactualizar.clicked.connect(self.accion_botonactualizar)
+
+        self.botoneliminar.clicked.connect(self.accion_botoneliminar)
 
 
 
@@ -271,10 +282,10 @@ class VentanaBl(QMainWindow):
     def consecutivo_iniciarl(self):
         #___________Consecutivo inicial para entrada________
         # abrimos el archivo en modo binario
-        self.file = open('Datos/Datos_PQRS.txt', 'rb')
+        self.file = open('Datos/Datos_Egreso.txt', 'rb')
 
         # creamos una lista vacia
-        pqrs = []
+        egreso = []
 
         while self.file:
             # lea el archivo y traiga los datos
@@ -287,17 +298,14 @@ class VentanaBl(QMainWindow):
             if linea == '':
                 break
             # creamos un objeto tipo cliente llamado u
-            dp = PQRS(
+            de = Egreso(
                 lista[0],
                 lista[1],
                 lista[2],
                 lista[3],
-                lista[4],
-                lista[5],
-                lista[6],
             )
             # Metemos el objeto en la lista usuario
-            pqrs.append(dp)
+            egreso.append(de)
 
         self.file.close()
 
@@ -305,40 +313,32 @@ class VentanaBl(QMainWindow):
 
         # Variable para controlar si existe el documento
 
-        for dp in pqrs:
-            # Comparemos el documento ingresado
-            # Si corresponde con el documento es el usuario correcto
-
-            if not dp.idegreso =='':
-                self.consecutivo=int(dp.idegreso)
-                self.idegresoText.setText(str(self.consecutivo+1))
+        max_idegreso = 0
+        for de in egreso:
+            if de.idegreso and int(de.idegreso) > max_idegreso:
+                max_idegreso = int(de.idegreso)
+        self.consecutivo = max_idegreso
+        self.idegresoText.setText(str(self.consecutivo + 1))
         if self.idegresoText.text()=="":
             self.idegresoText.setText("1")
+
     def accion_botonlimpiar(self):
         self.idegresoText.setText("")
-        self.cedulaText.setText("")
-        self.placaText.setText("")
-        self.estadoText.setCurrentIndex(0)
-        self.fechacierreText.setText(datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
-        self.descripcionrText.setText("")
+        self.descripcionText.setText("")
+        self.valorText.setText("")
         self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))  # para mostrar la fecha actual
         self.consecutivo_iniciarl()
         self.idegresoText.setReadOnly(False)
-        self.cedulaText.setReadOnly(False)
-        self.placaText.setReadOnly(False)
-        self.fechacierreText.setReadOnly(False)
-        self.descripcionrText.setReadOnly(False)
+        self.descripcionText.setReadOnly(False)
         self.fechaText.setReadOnly(False)
     def accion_botonGuardar(self):
-
-        print("Inicia BT Guardar")
         self.datoscorrectos = True
         # ___________Consecutivo inicial para entrada________
         # abrimos el archivo en modo binario
-        self.file = open('Datos/Datos_PQRS.txt', 'rb')
+        self.file = open('Datos/Datos_Egreso.txt', 'rb')
 
         # creamos una lista vacia
-        pqrs = []
+        egreso = []
 
         while self.file:
             # lea el archivo y traiga los datos
@@ -351,17 +351,14 @@ class VentanaBl(QMainWindow):
             if linea == '':
                 break
             # creamos un objeto tipo cliente llamado u
-            dp = PQRS(
+            de = Egreso(
                 lista[0],
                 lista[1],
                 lista[2],
                 lista[3],
-                lista[4],
-                lista[5],
-                lista[6],
             )
             # Metemos el objeto en la lista usuario
-            pqrs.append(dp)
+            egreso.append(de)
 
         self.file.close()
 
@@ -369,41 +366,35 @@ class VentanaBl(QMainWindow):
 
         # Variable para controlar si existe el documento
 
-        for dp in pqrs:
+        for de in egreso:
             # Comparemos el documento ingresado
             # Si corresponde con el documento es el usuario correcto
 
-            if dp.idegreso == self.idegresoText.text():
-                self.mensaje.setText(f"La queja o reclamo con el consecutivo: {self.idegresoText.text()}\nYa se encuentra registrada")
+            if de.idegreso == self.idegresoText.text():
+                self.mensaje.setText(f"El Egreso con el consecutivo: {self.idegresoText.text()}\nYa se encuentra registrado")
                 self.ventanaDialogo.exec_()
                 self.datoscorrectos = False
                 self.accion_botonlimpiar()
                 break
 
-        print("Inicia Validacion si los campos estan vacios")
+
+
         # Validacion si las casillas de texto estan vacias o realizado modificacion en los campos
         if self.datoscorrectos == True and (self.idegresoText.text() == '' or
-                                            self.cedulaText.text() == '' or
-                                            self.placaText.text() == '' or
                                             self.fechaText.text() == '' or
-                                            self.estadoText.currentText() == '' or
-                                            self.fechacierreText.text() == '' or
-                                            self.descripcionrText.text() == ''
+                                            self.valorText.text() == '' or
+                                            self.descripcionText.text() == ''
         ):
             self.datoscorrectos = False
             # cambiamos mensaje
             self.mensaje.setText("Debe ingresar todos los campos para guardar")
 
             self.ventanaDialogo.exec_()
-        print("Inicia Validacion si los campos tienen espacios")
+
         # Validar que usuario ingreso datos con espacios/ verdadero si tiene espacios/ falso si no tiene espacios
-        if self.datoscorrectos == True and (self.estadoText.currentText().isspace()
-                                            or self.cedulaText.text().isspace()
-                                            or self.placaText.text().isspace()
-                                            or self.fechaText.text().isspace()
-                                            or self.estadoText.currentText().isspace()
-                                            or self.descripcionrText.text().isspace()
-                                            or self.fechacierreText.text().isspace()
+        if self.datoscorrectos == True and (self.fechaText.text().isspace()
+                                            or self.descripcionText.text().isspace()
+                                            or self.valorText.text().isspace()
         ):
             self.datoscorrectos = False
 
@@ -411,12 +402,11 @@ class VentanaBl(QMainWindow):
             self.ventanaDialogo.exec_()
         # Fin Validacion Espacios
 
-        print("Inicia Validacion si los campos tienen letras")
         # Validacion si modelo es numeros/ verdadero si son numeros/falso si son letras
         if self.datoscorrectos == True and (self.idegreso.text().isalpha() or
-                                            self.cedulaText.text().isalpha() or
-                                            self.fechaText.text().isalpha() or
-                                            self.fechacierreText.text().isalpha()
+                                            self.valorText.text().isalpha() or
+                                            self.fechaText.text().isalpha()
+
         ):
             self.datoscorrectos = False
 
@@ -424,125 +414,28 @@ class VentanaBl(QMainWindow):
             self.ventanaDialogo.exec_()
 
         # Validacion si en marca o en color son letras / verdadero si son letras/ falso si es numero
-        if self.datoscorrectos == True and (self.descripcionrText.text().isdigit()or
-                                            self.estadoText.currentText().isdigit()
+        if self.datoscorrectos == True and (self.descripcionText.text().isdigit()
         ):
             self.datoscorrectos = False
-            self.mensaje.setText("Ha ingresador numeros en la descripcion o estado")
+            self.mensaje.setText("Ha ingresador numeros en la descripcion")
             self.ventanaDialogo.exec_()
         # Fin Validacion Numeros
 
-        # ________Validarcion cliente ya registrador__________
-        self.file = open('Datos/Datos_cliente.txt', 'rb')
-
-        # creamos una lista vacia
-        clientes = []
-
-        while self.file:
-            # lea el archivo y traiga los datos
-            linea = self.file.readline().decode('UTF-8')
-
-            # elimine el ; y ponga en una posicion
-            lista = linea.split(";")
-
-            # se para si ya no hay mas registros
-            if linea == '':
-                break
-            # creamos un objeto tipo cliente llamado u
-            dc = Clientes(
-                lista[0],
-                lista[1],
-                lista[2],
-                lista[3],
-            )
-            # Metemos el objeto en la lista usuario
-            clientes.append(dc)
-
-        self.file.close()
-
-        for dc in clientes:
-            # Comparemos el documento ingresado
-            # Si corresponde con el documento es el usuario correcto
-
-            if dc.cedula == self.cedulaText.text() and self.datoscorrectos == True:
-                self.validacion = True
-                print("CD registrada")
-                break
-            else:
-                self.validacion = False
-
-        if self.datoscorrectos == True and self.validacion == False:
-            self.mensaje.setText("El documento del cliente no se encuentra registrado")
-            self.ventanaDialogo.exec_()
-            self.datoscorrectos = False
-
-        # ____________VAlidacion si el vehiculo ya se encuentra registrado
-
-        # abrimos el archivo  en modo binario
-        self.file = open('Datos/Datos_vehiculos.txt', 'rb')
-
-        # creamos una lista vacia
-        vehiculos = []
-
-        while self.file:
-            # lea el archivo y traiga los datos
-            linea = self.file.readline().decode('UTF-8')
-
-            # elimine el ; y ponga en una posicion
-            lista = linea.split(";")
-
-            # se para si ya no hay mas registros
-            if linea == '':
-                break
-            # creamos un objeto tipo cliente llamado u
-            dv = Vehiculos(
-                lista[0],
-                lista[1],
-                lista[2],
-                lista[3],
-            )
-            # Metemos el objeto en la lista usuario
-            vehiculos.append(dv)
-
-        self.file.close()
-
-        for dv in vehiculos:
-            # Comparemos el documento ingresado
-            # Si corresponde con el documento es el usuario correcto
-            if dv.placa == self.placaText.text() and self.datoscorrectos == True:
-                self.validacion = True
-                print("Vh registrada")
-                break
-            else:
-                self.validacion = False
-
-        if self.datoscorrectos == True and self.validacion == False:
-            self.mensaje.setText("El Vehiculo no se encuentra registrado")
-            self.ventanaDialogo.exec_()
-            self.datoscorrectos = False
-
-
-
-        # si todo esta ok guarda los datos
+        #si todo esta ok guarda los datos
         if self.datoscorrectos:
             self.mensaje.setText("Datos guardados correctamente")
 
             self.ventanaDialogo.exec_()
             # abrimos el archivo en modo agregar
-            self.file = open('Datos/Datos_PQRS.txt', 'ab')
+            self.file = open('Datos/Datos_Egreso.txt', 'ab')
 
             # Traer el texto de los Qline y los concatena con ;
             self.file.write(bytes(
                 # Cajas de texto de la pestaña
                 self.idegresoText.text() + ";"
-                + self.cedulaText.text() + ";"
-                + self.placaText.text() + ";"
                 + self.fechaText.text() + ";"
-                + self.estadoText.currentText() + ";"
-                + self.descripcionrText.text() + ";"
-                + self.fechacierreText.text() + "\n", encoding='UTF-8'))
-            self.file.close()
-
+                + self.descripcionText.text() + ";"
+                + self.valorText.text() + "\n", encoding='UTF-8'))
             self.file.close()
             self.accion_botonlimpiar()
     def accion_botonConsultar(self):
@@ -555,8 +448,8 @@ class VentanaBl(QMainWindow):
         if (self.idegresoText.text() == ''):
             self.datoscorrectos = False
 
-            self.mensaje.setText("Si va a consultar una PQRS"
-                                 "\nDebe primero, ingresar la id PQRS")
+            self.mensaje.setText("Si va a consultar una Egreso"
+                                 "\nDebe primero, ingresar la id Egreso")
             self.ingresoText.setFocus()
             self.accion_botonlimpiar()
             self.ventanaDialogo.exec_()
@@ -564,10 +457,10 @@ class VentanaBl(QMainWindow):
 
         if (self.datoscorrectos):
             # abrimos el archivo en modo binario
-            self.file = open('Datos/Datos_PQRS.txt', 'rb')
+            self.file = open('Datos/Datos_Egreso.txt', 'rb')
 
             # creamos una lista vacia
-            pqrs = []
+            egreso = []
 
             while self.file:
                 # lea el archivo y traiga los datos
@@ -580,17 +473,14 @@ class VentanaBl(QMainWindow):
                 if linea == '':
                     break
                 # creamos un objeto tipo cliente llamado u
-                dp = PQRS(
+                de = Egreso(
                     lista[0],
                     lista[1],
                     lista[2],
                     lista[3],
-                    lista[4],
-                    lista[5],
-                    lista[6],
                 )
                 # Metemos el objeto en la lista usuario
-                pqrs.append(dp)
+                egreso.append(de)
 
             self.file.close()
 
@@ -598,48 +488,254 @@ class VentanaBl(QMainWindow):
 
             # Variable para controlar si existe el documento
             idegreso=False
-            for dp in pqrs:
+            for de in egreso:
                 # Comparemos el documento ingresado
                 # Si corresponde con el documento es el usuario correcto
-                if dp.idegreso == self.idegresoText.text():
+                if de.idegreso == self.idegresoText.text():
                     # limpiamos las cajas de texto
-                    self.cedulaText.setText("")
-                    self.placaText.setText("")
                     self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
-                    self.estadoText.currentText()
-                    self.descripcionrText.setText("")
-                    self.fechacierreText.setText(datetime.date.today().strftime("%d/%m/%Y"))
+                    self.descripcionText.setText("")
+                    self.valorText.setText("")
+                   
 
                     # Mostramos las preguntas en el formulario
-                    self.cedulaText.setText(dp.documento)
-                    self.placaText.setText(dp.placa)
-                    self.fechaText.setText(dp.fechaq)
-
-                    if dp.estado=="Pendiente":
-                        self.estadoText.setCurrentIndex(0)
-                    elif dp.estado=="Solucionado":
-                        self.estadoText.setCurrentIndex(1)
-
-                    self.descripcionrText.setText(dp.descripcion)
-                    self.fechacierreText.setText(dp.fechas)
+                    self.idegresoText.setText(de.idegreso)
+                    self.descripcionText.setText(de.descripcion)
+                    self.fechaText.setText(de.fecha)
+                    self.valorText.setText(de.valor)
 
                     # indicamos que encontramos el documento
                     idegreso = True
-                    self.idegresoText.setReadOnly(True)
-                    self.cedulaText.setReadOnly(True)
-                    self.placaText.setReadOnly(True)
-                    self.descripcionrText.setReadOnly(True)
-                    self.fechaText.setReadOnly(True)
-                    self.fechacierreText.setReadOnly(True)
-                    self.estadoText.setEnabled(False)
-                    # Rompemos el for
+
                     break
 
             if (not idegreso):
-                self.mensaje.setText(f"El ID de ingreso{self.idegresoText.text()} \nNo ha sido registrado")
+                self.mensaje.setText(f"El ID de egreso{self.idegresoText.text()} \nNo ha sido registrado")
                 self.accion_botonlimpiar()
                 # Hacemos que la ventana se vea
                 self.ventanaDialogo.exec_()
+    def accion_botoneliminar(self):
+        self.datosCorrectos = True
+        self.eliminar = False
+
+        if (
+                self.idegresoText.text() == ''
+        ):
+            self.datosCorrectos = False
+            self.mensaje.setText("Debe seleccionar un egreso válido para eliminar")
+            self.ventanaDialogo.exec_()
+
+        if self.datosCorrectos:
+
+            self.ventanaDialogo_eliminar = QDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
+
+            self.ventanaDialogo_eliminar.resize(300, 150)
+
+            self.ventanaDialogo_eliminar.setWindowModality(Qt.ApplicationModal)
+            self.ventanaDialogo_eliminar.setWindowTitle("Eliminar")
+            self.ventanaDialogo_eliminar.setWindowIcon(QIcon("imagenes/IconoGPP.jpeg"))
+
+            self.verticalEliminar = QVBoxLayout()
+
+            self.mensajeEliminar = QLabel("¿Estas seguro que desea eliminar este egreso?")
+
+            self.verticalEliminar.addWidget(self.mensajeEliminar)
+
+            # agregar las opciones de los bontes ok y cancel
+
+            self.opcionesEliminar = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+            self.opcionesBox = QDialogButtonBox(self.opcionesEliminar)
+
+            self.opcionesBox.accepted.connect(self.ok_opcion)
+            self.opcionesBox.rejected.connect(self.cancel_opcion)
+
+            # agergamos opcionBox
+            self.verticalEliminar.addWidget(self.opcionesBox)
+
+            self.ventanaDialogo_eliminar.setLayout(self.verticalEliminar)
+
+            self.ventanaDialogo_eliminar.exec_()
+
+            if self.eliminar:
+
+                self.file = open('Datos/Datos_Egreso.txt', 'rb')
+
+                # creamos una lista vacia
+                egreso = []
+
+                while self.file:
+                    # lea el archivo y traiga los datos
+                    linea = self.file.readline().decode('UTF-8')
+
+                    # elimine el ; y ponga en una posicion
+                    lista = linea.split(";")
+
+                    # se para si ya no hay mas registros
+                    if linea == '':
+                        break
+                    # creamos un objeto tipo cliente llamado u
+                    de = Egreso(
+                        lista[0],
+                        lista[1],
+                        lista[2],
+                        lista[3],
+                    )
+                    # Metemos el objeto en la lista usuario
+                    egreso.append(de)
+
+                self.file.close()
+
+                existeDocumento = False
+
+                # ciclo for para remover el registro de un usuario
+                for de in egreso:
+
+                    if de.idegreso == self.idegresoText.text():
+                        egreso.remove(de)
+                        existeDocumento = True
+                        break
+
+                self.file = open('Datos/Datos_Egreso.txt', 'wb')
+
+                # reescribir el registro del usuario a vacio
+
+                for de in egreso:
+                    self.file.write(bytes(de.idegreso + ';'
+                                          + de.fecha + ';'
+                                          + de.descripcion + ';'
+                                          + de.valor , encoding='UTF-8'))
+                self.file.close()
+
+                if existeDocumento:
+                    self.mensaje.setText("Vehiculo eliminado correctamente.")
+                    self.ventanaDialogo.exec_()
+                    self.accion_botonlimpiar()
+    def ok_opcion(self):
+        self.ventanaDialogo_eliminar.close()
+        self.eliminar = True
+
+    def cancel_opcion(self):
+        self.ventanaDialogo_eliminar.close()
+    def accion_botonactualizar(self):
+        self.datoscorrectos = True
+
+
+        # Validacion si las casillas de texto estan vacias o realizado modificacion en los campos
+        if self.datoscorrectos == True and (self.idegresoText.text() == '' or
+                                            self.fechaText.text() == '' or
+                                            self.valorText.text() == '' or
+                                            self.descripcionText.text() == ''
+        ):
+            self.datoscorrectos = False
+            # cambiamos mensaje
+            self.mensaje.setText("Debe ingresar todos los campos para actualizar")
+
+            self.ventanaDialogo.exec_()
+
+        # Validar que usuario ingreso datos con espacios/ verdadero si tiene espacios/ falso si no tiene espacios
+        if self.datoscorrectos == True and (self.fechaText.text().isspace()
+                                            or self.descripcionText.text().isspace()
+                                            or self.valorText.text().isspace()
+        ):
+            self.datoscorrectos = False
+
+            self.mensaje.setText("Ha Ingresado espacios en blanco")
+            self.ventanaDialogo.exec_()
+        # Fin Validacion Espacios
+
+        # Validacion si modelo es numeros/ verdadero si son numeros/falso si son letras
+        if self.datoscorrectos == True and (self.idegreso.text().isalpha() or
+                                            self.valorText.text().isalpha() or
+                                            self.fechaText.text().isalpha()
+
+        ):
+            self.datoscorrectos = False
+
+            self.mensaje.setText("Ha ingresado letras en los campos numericos")
+            self.ventanaDialogo.exec_()
+
+        # Validacion si en marca o en color son letras / verdadero si son letras/ falso si es numero
+        if self.datoscorrectos == True and (self.descripcionText.text().isdigit()
+        ):
+            self.datoscorrectos = False
+            self.mensaje.setText("Ha ingresador numeros en la descripcion")
+            self.ventanaDialogo.exec_()
+        # Fin Validacion Numeros
+
+        if self.datoscorrectos:
+
+            self.file = open('Datos/Datos_Egreso.txt', 'rb')
+
+            # creamos una lista vacia
+            egreso = []
+
+            while self.file:
+                # lea el archivo y traiga los datos
+                linea = self.file.readline().decode('UTF-8')
+
+                # elimine el ; y ponga en una posicion
+                lista = linea.split(";")
+
+                # se para si ya no hay mas registros
+                if linea == '':
+                    break
+                # creamos un objeto tipo cliente llamado u
+                de = Egreso(
+                    lista[0],
+                    lista[1],
+                    lista[2],
+                    lista[3],
+                )
+                # Metemos el objeto en la lista usuario
+                egreso.append(de)
+
+            self.file.close()
+
+            existeDocumento = False
+
+            for de in egreso:
+
+                if de.idegreso == self.idegresoText.text():
+                    de.descripcion = self.descripcionText.text()
+                    de.fecha = self.fechaText.text()
+                    de.valor = self.valorText.text()
+
+                    existeDocumento = True
+                    break
+
+            if (
+                    not existeDocumento
+            ):
+                self.mensaje.setText(f"No existe egreso con esa ID\n"
+                                     f"{self.idegresoText.text()}")
+                self.ventanaDialogo.exec_()
+
+            # Abrimos el archivo en modo agregar
+            self.file = open('Datos/Datos_Egreso.txt', 'wb')
+
+            for de in egreso:
+                # trae el texto de los Qline y los concatena
+                self.file.write(bytes(de.idegreso + ";" +
+                                      de.fecha + ";" +
+                                      de.descripcion + ";" +
+                                      de.valor, encoding='UTF-8'))
+            self.file.close()
+
+            if (
+                    existeDocumento
+            ):
+                self.mensaje.setText("Egreso actualizado correctamente!")
+                self.ventanaDialogo.exec_()
+                self.accion_botonlimpiar()
+
+            self.file = open('Datos/Datos_Egreso.txt', 'rb')
+            while self.file:
+                linea = self.file.readline().decode('UTF-8')
+
+                if linea == '':
+                    break
+            self.file.close()
+
     def accion_barraDeHerramientas(self, option):
         # escodase ventana
 
@@ -665,14 +761,3 @@ class VentanaBl(QMainWindow):
             self.accion_botonConsultar()
         if event.key() == Qt.Key_F3:
             self.accion_botonlimpiar()
-        if Ayudas.Ayuda.TipoUsuario=="Admin":
-            if event.key() == Qt.Key_F4:
-                self.accion_botonActualizar()
-            if event.key() == Qt.Key_F5:
-                self.accion_botonEliminar()
-
-
-
-
-
-

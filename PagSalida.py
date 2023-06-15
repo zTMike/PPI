@@ -7,6 +7,7 @@ from PyQt5 import QtCore
 import datetime
 
 from DatosEntrada import Entrada
+from DatosOcupacion import Ocupacion
 from DatosSalida import Salida
 from DatosCliente import Clientes
 from DatosVehiculo import Vehiculos
@@ -267,7 +268,7 @@ class VentanaRs(QMainWindow):
 
 
     def accion_botonGuardar(self):
-
+        self.celdaText.setText("0")
         self.mensaje.setText("Datos guardados correctamente")
         self.ventanaDialogo.exec_()
         # abrimos el archivo en modo agregar
@@ -284,9 +285,8 @@ class VentanaRs(QMainWindow):
             + self.horaText.text() + ";"
             + self.fechasText.text() + ";"
             + self.horasText.text() + ";"
-            + self.celdaText.text() , encoding='UTF-8'))
+            + self.celdaText.text() +"\n", encoding='UTF-8'))
         self.file.close()
-
         #_____________Ingreso______________
         fechastr = datetime.datetime.strptime(self.fechaText.text(), '%d/%m/%Y')
         horastr = datetime.datetime.strptime(self.horaText.text(), '%H:%M:%S').time()
@@ -320,7 +320,10 @@ class VentanaRs(QMainWindow):
 
         # Calculate time difference in hours
         self.tiempo = int((datetime2 - datetime1).total_seconds())
-        self.Totalngreso=self.tiempo*0.416
+        self.Totalngreso = '{:.0f}'.format(self.tiempo * 0.416)
+        self.tiempo1 = int((datetime2 - datetime1).total_seconds())/3600
+        self.tiempo1 = '{:.0f}'.format(self.tiempo1)
+
 
 
 
@@ -336,11 +339,62 @@ class VentanaRs(QMainWindow):
             self.salidaText.text() + ";"
             + self.cedulaText.text() + ";"
             + self.fechasText.text() + ";"
-            + str(self.tiempo) + ";"
+            + str(self.tiempo1) + ";"
             + str(self.Totalngreso) + "\n", encoding='UTF-8'))
         self.file.close()
 
+        # agregamos 1 a los datos ocupados
+        # abrimos el archivo en modo agregar
+        self.file = open('Datos/Datos_Ocupacion_Parqueadero.txt', 'ab')
+
+        # Traer el texto de los Qline y los concatena con ;
+        self.file.write(bytes(
+            # Cajas de texto de la pestaña
+            self.celdaText.text() , encoding='UTF-8'))
+        self.file.close()
+        print(self.celdaText.text())
+        # elimina una celda vacia
+
+        self.file = open('Datos/Datos_Ocupacion_Parqueadero.txt', 'rb')
+
+        # creamos una lista vacia
+        ocupacion = []
+
+        while self.file:
+            # lea el archivo y traiga los datos
+            linea = self.file.readline().decode('UTF-8')
+
+            # elimine el ; y ponga en una posicion
+            lista = linea.split(";")
+
+            # se para si ya no hay mas registros
+            if linea == '':
+                break
+            # creamos un objeto tipo cliente llamado u
+            oc = Ocupacion(
+                lista[0]
+            )
+            # Metemos el objeto en la lista usuario
+            ocupacion.append(oc)
+
+        self.file.close()
+
+        # ciclo for para remover el registro de un usuario
+        for oc in ocupacion:
+
+            if int(oc.celda) == 1:
+                ocupacion.remove(oc)
+                break
+
+        self.file = open('Datos/Datos_Ocupacion_Parqueadero.txt', 'wb')
+
+        # reescribir el registro del usuario a vacio
+
+        for oc in ocupacion:
+            self.file.write(bytes(oc.celda, encoding='UTF-8'))
+        self.file.close()
         self.accion_botonLimpiar()
+
 
 
     def accion_botonConsultar(self):
@@ -582,7 +636,7 @@ class VentanaRs(QMainWindow):
                             self.celdaText.setPlaceholderText("Ingrese Número de Celda")
                             self.celdaText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-                            self.formulario.addRow(self.celda, self.celdaText)
+                            self.celdaText.setText("0")
 
                             # Linea Separadora
                             self.formulario.addRow(self.letrero2)
@@ -609,7 +663,7 @@ class VentanaRs(QMainWindow):
                             self.placaText.setText("")
                             self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
                             self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
-                            self.celdaText.setText("")
+                            self.celdaText.setText("0")
 
                             self.cedulaText.setText(de.documento)
                             self.placaText.setText(de.placa)
@@ -848,7 +902,7 @@ class VentanaRs(QMainWindow):
                         self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
                         self.horasText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
                         self.fechasText.setText(datetime.date.today().strftime("%d/%m/%Y"))
-                        self.celdaText.setText("")
+                        self.celdaText.setText("0")
                         # Mostramos las preguntas en el formulario
                         self.ingresoText.setText(ds.identrada)
                         self.cedulaText.setText(ds.documento)
@@ -884,7 +938,7 @@ class VentanaRs(QMainWindow):
         self.placaText.setText("")
         self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
         self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
-        self.celdaText.setText("")
+        self.celdaText.setText("0")
         self.horasText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
         self.fechasText.setText(datetime.date.today().strftime("%d/%m/%Y"))
         self.botonLimpiar.deleteLater()
