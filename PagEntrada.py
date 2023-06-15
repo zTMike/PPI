@@ -8,6 +8,7 @@ import datetime
 from DatosEntrada import Entrada
 from DatosCliente import Clientes
 from DatosVehiculo import Vehiculos
+from DatosOcupacion import Ocupacion
 import Ayudas
 
 
@@ -94,9 +95,35 @@ class VentanaRi(QMainWindow):
         # Activar Barra De herramientas
         self.barraHerramientas.actionTriggered[QAction].connect(self.accion_barraDeHerramientas)
 
-        self.formulario = QFormLayout()
+        self.accion_ocupacion()
+        self.vertical=QVBoxLayout()
+        self.vertical1=QVBoxLayout()
+        self.vertical1.setContentsMargins(400,0,0,-50)
 
-        self.interna.setLayout(self.formulario)
+
+
+        
+        
+        self.letreroocuopado = QLabel()
+        self.letreroocuopado.setText("La cantidad de celdas ocupadas: "+str(self.cceldaocupada))
+        self.letreroocuopado.setFont(QFont("league spartan", 11))
+        self.letreroocuopado.setStyleSheet("background: rgba(76, 175, 80, 0.0);font-weight: bold")
+        self.vertical1.addWidget(self.letreroocuopado)
+        
+        
+        
+        
+        self.letrerodisponible=QLabel()
+        self.letrerodisponible = QLabel()
+        self.letrerodisponible.setText("La cantidad de celdas disponibles: "+str(self.cceldavacia))
+        self.letrerodisponible.setFont(QFont("league spartan", 11))
+        self.letrerodisponible.setStyleSheet("background: rgba(76, 175, 80, 0.0);font-weight: bold")
+        self.vertical1.addWidget(self.letrerodisponible)
+        
+        self.vertical.addLayout(self.vertical1)
+
+        self.formulario = QFormLayout()
+        self.formulario.setContentsMargins(0,0,0,150)
 
         self.letrero1 = QLabel()
         self.letrero1.setText("Registro de Entrada")
@@ -104,7 +131,7 @@ class VentanaRi(QMainWindow):
         self.letrero1.setFont(QFont("league spartan", 29))
         self.letrero1.setAlignment(Qt.AlignCenter)
 
-        self.letrero1.setStyleSheet("background: rgba(76, 175, 80, 0.0); margin-bottom:80px; margin-top:90px;font-weight: bold")
+        self.letrero1.setStyleSheet("background: rgba(76, 175, 80, 0.0);font-weight: bold")
         self.formulario.addRow(self.letrero1)
 
 
@@ -220,7 +247,7 @@ class VentanaRi(QMainWindow):
         self.celdaText.setPlaceholderText("Ingrese Número de Celda")
         self.celdaText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                       "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-        self.formulario.addRow(self.celda, self.celdaText)
+        self.celdaText.setText("1")
 
 
 
@@ -251,9 +278,9 @@ class VentanaRi(QMainWindow):
 
         self.botonLimpiar.clicked.connect(self.accion_botonLimpiar)
 
+        self.vertical.addLayout(self.formulario)
 
-
-        self.fondo.setLayout(self.formulario)
+        self.fondo.setLayout(self.vertical)
 
         # ________________Ventana emergente___________
         # creamos ventana de dialogo
@@ -297,6 +324,43 @@ class VentanaRi(QMainWindow):
         # asigna layout a la ventana
         self.ventanaDialogo.setLayout(self.vertical)
         self.consecutivo_iniciarl()
+        
+    def accion_ocupacion(self):
+        # abrimos el archivo  en modo binario
+        self.file = open('Datos/Datos_Ocupacion_Parqueadero.txt', 'rb')
+
+        # creamos una lista vacia
+        ocupacion = []
+
+        while self.file:
+            # lea el archivo y traiga los datos
+            linea = self.file.readline().decode('UTF-8')
+
+            # elimine el ; y ponga en una posicion
+            lista = linea.split(";")
+
+            # se para si ya no hay mas registros
+            if linea == '':
+                break
+            # creamos un objeto tipo cliente llamado u
+            oc = Ocupacion(
+                lista[0]
+            )
+            # Metemos el objeto en la lista usuario
+            ocupacion.append(oc)
+
+        self.file.close()
+        self.cceldaocupada = 0
+        self.cceldavacia = 0
+        for oc in ocupacion:
+            # Comparemos el documento ingresado
+            # Si corresponde con el documento es el usuario correcto
+            if int(oc.celda) == 1:
+                self.cceldaocupada = self.cceldaocupada + 1
+            else:
+                self.cceldavacia = self.cceldavacia + 1
+
+
 
     def consecutivo_iniciarl(self):
         #___________Consecutivo inicial para entrada________
@@ -334,18 +398,14 @@ class VentanaRi(QMainWindow):
 
         # Variable para controlar si existe el documento
 
+        max_idingreso = 0
         for de in entrada:
-            # Comparemos el documento ingresado
-            # Si corresponde con el documento es el usuario correcto
-
-            if not de.idingreso =='':
-                self.consecutivo=int(de.idingreso)
-                self.ingresoText.setText(str(self.consecutivo+1))
+            if de.idingreso and int(de.idingreso) > max_idingreso:
+                max_idingreso = int(de.idingreso)
+        self.consecutivo = max_idingreso
+        self.ingresoText.setText(str(self.consecutivo + 1))
         if self.ingresoText.text() == "":
             self.ingresoText.setText("1")
-
-
-
 
     def accion_botonGuardar(self):
 
@@ -535,13 +595,13 @@ class VentanaRi(QMainWindow):
 
 
 
-        # ____________VAlidar si el celda ya se encuentra Ocupada_______
 
-        # abrimos el archivo en modo binario
-        self.file = open('Datos/Datos_Entrada.txt', 'rb')
+
+        # abrimos el archivo  en modo binario
+        self.file = open('Datos/Datos_Ocupacion_Parqueadero.txt', 'rb')
 
         # creamos una lista vacia
-        vcelda = []
+        ocupacion = []
 
         while self.file:
             # lea el archivo y traiga los datos
@@ -554,35 +614,36 @@ class VentanaRi(QMainWindow):
             if linea == '':
                 break
             # creamos un objeto tipo cliente llamado u
-            de1 = Entrada(
-                lista[0],
-                lista[1],
-                lista[2],
-                lista[3],
-                lista[4],
-                lista[5],
+            oc = Ocupacion(
+                lista[0]
             )
             # Metemos el objeto en la lista usuario
-            vcelda.append(de1)
+            ocupacion.append(oc)
 
         self.file.close()
+        self.cceldaocupada=0
+        self.cceldavacia=0
+        for oc in ocupacion:
+            # Comparemos el documento ingresado
+            # Si corresponde con el documento es el usuario correcto
+            if int(oc.celda)==1:
+                self.cceldaocupada=self.cceldaocupada+1
+            else:
+                self.cceldavacia=self.cceldavacia+1
 
-        # En este punto tenemos la lista de usuario con todos los usuarios
+        if self.cceldaocupada>=70:
+            self.datoscorrectos=False
+            self.mensaje.setText("La ocupacion del parqueadero esta al maximo")
+            self.ventanaDialogo.exec_()
 
-        # Variable para controlar si existe el documento
+        print(self.cceldavacia)
+        print(self.cceldaocupada)
 
-        for de1 in vcelda:
-            if self.datoscorrectos==True:
-                self.txtcelda=str(int(de1.celda))
-                if self.txtcelda==self.celdaText.text():
-                    self.mensaje.setText(f"La celda {self.celdaText.text()} Ya se encuentra en uso")
-                    self.ventanaDialogo.exec_()
-                    self.datoscorrectos = False
 
 
         # si todo esta ok guarda los datos
         if self.datoscorrectos:
-            print("Celda Libre")
+
             self.mensaje.setText("Datos guardados correctamente")
 
             self.ventanaDialogo.exec_()
@@ -600,10 +661,64 @@ class VentanaRi(QMainWindow):
                 + self.celdaText.text()+ "\n", encoding='UTF-8'))
             self.file.close()
 
+            #agregamos 1 a los datos ocupados
+            # abrimos el archivo en modo agregar
+            self.file = open('Datos/Datos_Ocupacion_Parqueadero.txt', 'ab')
 
+            # Traer el texto de los Qline y los concatena con ;
+            self.file.write(bytes(
+                # Cajas de texto de la pestaña
+                self.celdaText.text() + "\n", encoding='UTF-8'))
+            self.file.close()
+
+            #elimina una celda vacia
+
+            self.file = open('Datos/Datos_Ocupacion_Parqueadero.txt', 'rb')
+
+            # creamos una lista vacia
+            ocupacion = []
+
+            while self.file:
+                # lea el archivo y traiga los datos
+                linea = self.file.readline().decode('UTF-8')
+
+                # elimine el ; y ponga en una posicion
+                lista = linea.split(";")
+
+                # se para si ya no hay mas registros
+                if linea == '':
+                    break
+                # creamos un objeto tipo cliente llamado u
+                oc = Ocupacion(
+                    lista[0]
+                )
+                # Metemos el objeto en la lista usuario
+                ocupacion.append(oc)
 
             self.file.close()
+
+
+            # ciclo for para remover el registro de un usuario
+            for oc in ocupacion:
+
+                if int(oc.celda)==0:
+                    ocupacion.remove(oc)
+                    break
+
+            self.file = open('Datos/Datos_Ocupacion_Parqueadero.txt', 'wb')
+
+            # reescribir el registro del usuario a vacio
+
+            for oc in ocupacion:
+                self.file.write(bytes(oc.celda , encoding='UTF-8'))
+            self.file.close()
+            self.accion_ocupacion()
+            self.letreroocuopado.setText("La cantidad de celdas ocupadas: " + str(self.cceldaocupada))
+            self.letrerodisponible.setText("La cantidad de celdas disponibles: " + str(self.cceldavacia))
+
             self.accion_botonLimpiar()
+
+
 
     def accion_botonConsultar(self):
         # datos correctos
@@ -666,7 +781,7 @@ class VentanaRi(QMainWindow):
                     self.placaText.setText("")
                     self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
                     self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
-                    self.celdaText.setText("")
+                    self.celdaText.setText("1")
 
 
                     # Mostramos las preguntas en el formulario
@@ -689,13 +804,9 @@ class VentanaRi(QMainWindow):
                 self.placaText.setText("")
                 self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
                 self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
-                self.celdaText.setText("")
+                self.celdaText.setText("1")
                 # Hacemos que la ventana se vea
                 self.ventanaDialogo.exec_()
-
-
-
-
 
     def accion_botonLimpiar(self):
         self.ingresoText.setText("")
@@ -703,14 +814,12 @@ class VentanaRi(QMainWindow):
         self.placaText.setText("")
         self.horaText.setText(datetime.datetime.now().strftime("%H:%M:%S"))
         self.fechaText.setText(datetime.date.today().strftime("%d/%m/%Y"))
-        self.celdaText.setText("")
+        self.celdaText.setText("1")
         self.consecutivo_iniciarl()
         self.ingresoText.setReadOnly(False)
         self.cedulaText.setReadOnly(False)
         self.placaText.setReadOnly(False)
         self.celdaText.setReadOnly(False)
-
-
     def accion_barraDeHerramientas(self, option):
         # escodase ventana
 

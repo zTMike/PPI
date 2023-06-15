@@ -13,8 +13,8 @@ from PagEntrada import VentanaRi
 from PagSalida import VentanaRs
 from PagPQRS import VentanaQr
 from PagConsultaIngresos import VentanaCI
-from CrearUsuario import VentanaCu
-from Balance import VentanaBl
+from PagCrearUsuario import VentanaCu
+from PagEgresos import VentanaBl
 from Ayudas import Ayuda
 
 
@@ -193,7 +193,7 @@ class Menu(QMainWindow):
         self.botoncrearusuario.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-        self.botonbalance = QPushButton("Balance")
+        self.botonbalance = QPushButton("Registro Egreso")
         self.botonbalance.setFixedWidth(170)
         self.formulario.addWidget(self.botonbalance)
         self.botonbalance.setStyleSheet("background-color:White; color:Black; padding:5px;"

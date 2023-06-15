@@ -1,3 +1,5 @@
+import datetime
+
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QPixmap, QIcon, QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDesktopWidget, QLabel, QFormLayout, QGridLayout, \
@@ -176,6 +178,7 @@ class VentanaCI(QMainWindow):
         self.FechaIText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                       "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
         self.FechaIText.setInputMask("99/99/9999")  # para mostrar las barras "/"
+        self.FechaIText.setText(datetime.date.today().strftime("%d/%m/%Y"))
         self.formulario.addRow(self.FechaI, self.FechaIText)
 
         # Caja de modulos #2
@@ -183,6 +186,7 @@ class VentanaCI(QMainWindow):
         # Texto informativo Nombre
         self.Fechaf = QLabel("Fecha Final: ")
         self.Fechaf.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:170px;font-weight: bold")
+
         self.Fechaf.setFont(QFont("league spartan", 12))
 
         # Entrada de dato Nombre
@@ -193,6 +197,7 @@ class VentanaCI(QMainWindow):
         self.FechafText.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                       "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
         self.FechafText.setInputMask("99/99/9999")  # para mostrar las barras "/"
+        self.FechafText.setText(datetime.date.today().strftime("%d/%m/%Y"))
         self.formulario.addRow(self.Fechaf, self.FechafText)
 
         self.botonConsultar = QPushButton("Consultar")
@@ -258,29 +263,48 @@ class VentanaCI(QMainWindow):
         self.tabla.setColumnWidth(0, 120)
         self.tabla.setColumnWidth(1, 120)
         self.tabla.setColumnWidth(2, 100)
-        self.tabla.setColumnWidth(3, 100)
-        self.tabla.setColumnWidth(4, 100)
+        self.tabla.setColumnWidth(3, 80)
+        self.tabla.setColumnWidth(4, 200)
         self.tabla.setHorizontalHeaderLabels(["ID Ingreso",
                                               "Dcoumento Cliente",
-                                              "Fecha de ingreso",
+                                              "Fecha del ingreso",
                                               "Horas",
                                               "Total A pagar"
                                               ])
 
         self.tabla.setRowCount(self.numeroingresos)
 
-        for u in self.ingresos:
+        self.FechaIText1 = int(self.FechaIText.text().replace('/', ''))
+        print("fecha inicial" ,self.FechaIText1)
+        print(type(self.FechaIText1))
+        self.FechafText1 = int(self.FechafText.text().replace('/', ''))
+        print("fecha final" , self.FechafText1)
+        print(type(self.FechafText1))
 
-            if u.fecha>=self.FechaIText.text() and u.fecha>=self.FechafText.text():
+        for u in self.ingresos:
+            self.fechaplano=u.fecha
+            self.fechaplano= int(self.fechaplano.replace('/', ''))
+
+            if self.fechaplano>=self.FechaIText1 and self.fechaplano<=self.FechafText1:
+
+
                 self.tabla.setItem(self.contador, 0, QTableWidgetItem(u.idingreso))
                 self.tabla.setItem(self.contador, 1, QTableWidgetItem(u.documento))
                 self.tabla.setItem(self.contador, 2, QTableWidgetItem(u.fecha))
                 self.tabla.setItem(self.contador, 3, QTableWidgetItem(u.horas))
-                self.tabla.setItem(self.contador, 4, QTableWidgetItem(u.ingreso))
+                self.tabla.setItem(self.contador, 4, QTableWidgetItem("$"+u.ingreso.strip()))
 
                 for i in range(self.tabla.columnCount()):
                     self.tabla.item(self.contador, i).setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
                 self.contador += 1
+
+
+        self.tabla.sortItems(2)
+
+        for row in range(self.tabla.rowCount()):
+            self.tabla.setItem(row, 0, QTableWidgetItem(str(row + 1)))
+
+        self.contador = self.tabla.rowCount()
 
         self.scrollArea.setWidget(self.tabla)
         self.formulario.addRow(self.scrollArea)

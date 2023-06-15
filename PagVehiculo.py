@@ -399,9 +399,6 @@ class VentanaRv(QMainWindow):
 
         if (
                 self.placaText.text() == ''
-                or self.modeloText.text() == ''
-                or self.colorVText.text() == ''
-                or self.marcaText.text() == ''
         ):
             self.datosCorrectos = False
             self.mensaje.setText("Debe seleccionar un vehiculo válido")
