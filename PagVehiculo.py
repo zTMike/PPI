@@ -212,12 +212,13 @@ class VentanaRv(QMainWindow):
 
             self.botonEliminar.clicked.connect(self.accion_botonEliminar)
 
-            self.botonActualizar = QPushButton("Actualizar")
-            self.botonActualizar.setFixedWidth(170)
-            self.formulario.addWidget(self.botonActualizar)
-            self.botonActualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
-                                            "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-            self.botonActualizar.clicked.connect(self.accion_botonActualizar)
+        self.botonActualizar = QPushButton("Actualizar")
+        self.botonActualizar.setFixedWidth(170)
+        self.formulario.addWidget(self.botonActualizar)
+        self.botonActualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                           "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.botonActualizar.clicked.connect(self.accion_botonActualizar)
+
 
         self.botonLimpiar = QPushButton("Limpiar")
         self.botonLimpiar.setFixedWidth(170)
@@ -353,7 +354,7 @@ class VentanaRv(QMainWindow):
 
             for u in vehiculos:
 
-                if  u.placa == self.placaText.text():
+                if u.placa == self.placaText.text():
                     u.modelo = self.modeloText.text()
                     u.color = self.colorVText.text()
                     u.marca = self.marcaText.text()
@@ -468,8 +469,7 @@ class VentanaRv(QMainWindow):
 
                 # ciclo for para remover el registro de un usuario
                 for u in vehiculos:
-
-                    if  u.placa == self.placaText.text():
+                    if u.placa == self.placaText.text():
                         vehiculos.remove(u)
                         existeDocumento = True
                         break
@@ -477,12 +477,12 @@ class VentanaRv(QMainWindow):
                 self.file = open('Datos/Datos_vehiculos.txt', 'wb')
 
                 # reescribir el registro del usuario a vacio
-
                 for u in vehiculos:
                     self.file.write(bytes(u.placa + ';'
                                           + u.modelo + ';'
                                           + u.color + ';'
-                                          + u.marca , encoding='UTF-8'))
+                                          + u.marca, encoding='UTF-8'))
+
                 self.file.close()
 
                 if existeDocumento:
@@ -740,7 +740,3 @@ class VentanaRv(QMainWindow):
         self.eliminar = True
     def cancel_opcion(self):
         self.ventanaDialogo_eliminar.close()
-
-
-
-

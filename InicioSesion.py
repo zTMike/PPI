@@ -286,31 +286,24 @@ class iniciodesesion(QMainWindow):
 
             # Variable para controlar si existe el documento
             datos = False
-            #Validar tipo usuario 3 es tipo falto
-            self.tipodeusuario=3
+            self.tipodeusuario="Otro"
             for du in usuario:
                 # Comparemos el documento ingresado
                 # Si corresponde con el documento es el usuario correcto
                 if (du.usuario == self.usuarioText.text() and du.contra == self.contraseñaText.text()):
                             print("Usuario OK")
-                            self.tipodeusuario=int(du.tipoU)
+                            self.tipodeusuario=str(du.tipoU).strip()
                             print(self.tipodeusuario)
                             datos=True
-                            break
-                            print(datos)
 
-            self.admin = int(1)
-            self.basic = int(0)
-
-
-            if self.tipodeusuario==self.admin:
+            if self.tipodeusuario == "Administrador":
                 print("Admin")
                 self.ventana2 = MenuAdmin.Menu(self)
                 self.ventana2.show()
                 Ayuda.TipoUsuario="Admin"
                 # inicio esconderse
                 self.hide()
-            elif(self.tipodeusuario==self.basic):
+            elif(self.tipodeusuario == "Basico"):
                 print("Basico")
                 self.ventana2 = MenuBasic.Menu(self)
                 self.ventana2.show()
@@ -321,8 +314,6 @@ class iniciodesesion(QMainWindow):
             self.usuarioText.setText("")
             self.contraseñaText.setText("")
             self.usuarioText.setFocus()
-
-            print(datos)
 
             if (datos==False):
                 self.mensaje.setText("Usuario O Contraseña incorrecto")
