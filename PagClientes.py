@@ -90,9 +90,9 @@ class VentanaCl(QMainWindow):
         # Activar Barra De herramientas
         self.barraHerramientas.actionTriggered[QAction].connect(self.accion_barraDeHerramientas)
 
-        self.formulario = QFormLayout()
+        self.vertical1=QVBoxLayout()
 
-        self.interna.setLayout(self.formulario)
+        self.formulario = QFormLayout()
 
         self.letrero1 = QLabel()
         self.letrero1.setText("Registro de \n Clientes")
@@ -180,46 +180,52 @@ class VentanaCl(QMainWindow):
         self.formulario.addRow(self.correo, self.correoText)
 
         self.formulario.addRow(self.letrero2)
+        self.vertical1.addLayout(self.formulario)
 
+        self.formulario1=QFormLayout()
+        self.formulario1.setContentsMargins(170,0,0,0)
         self.botonGuardar = QPushButton("Guardar")
         self.botonGuardar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonGuardar)
         self.botonGuardar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
         self.botonConsultar = QPushButton("Consultar")
         self.botonConsultar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonConsultar)
         self.botonConsultar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-
+        self.formulario1.addRow(self.botonGuardar,self.botonConsultar)
         self.botonActualizar = QPushButton("Actualizar")
         self.botonActualizar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonActualizar)
         self.botonActualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                            "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
         self.botonActualizar.clicked.connect(self.accion_botonActualizar)
 
         self.botonEliminar = QPushButton("Eliminar")
         self.botonEliminar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonEliminar)
         self.botonEliminar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                            "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
         self.botonEliminar.clicked.connect(self.accion_botonEliminar)
-
-        self.botonLimpiar = QPushButton("Limpiar")
-        self.botonLimpiar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonLimpiar)
-        self.botonLimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
-                                         "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.formulario1.addRow(self.botonActualizar, self.botonEliminar)
 
         self.botonGuardar.clicked.connect(self.accion_botonGuardar)
 
         self.botonConsultar.clicked.connect(self.accion_botonConsultar)
 
-        self.botonLimpiar.clicked.connect(self.accion_botonLimpiar)
+        self.vertical1.addLayout(self.formulario1)
 
-        self.fondo.setLayout(self.formulario)
+        self.horizontal=QHBoxLayout()
+
+        self.botonLimpiar = QPushButton("Limpiar")
+        self.botonLimpiar.setFixedWidth(170)
+        self.botonLimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                        "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.botonLimpiar.clicked.connect(self.accion_botonLimpiar)
+        self.horizontal.addWidget(self.botonLimpiar)
+
+        self.vertical1.addLayout(self.horizontal)
+        self.vertical1.addSpacing(160)
+
+        self.fondo.setLayout(self.vertical1)
 
         #________________Ventana emergente___________
         #creamos ventana de dialogo
@@ -253,7 +259,7 @@ class VentanaCl(QMainWindow):
 
 
 
-        #Creamos layout vertical
+        #Creamos layout
         self.vertical=QVBoxLayout()
 
         #Creamos en label para los mensajes

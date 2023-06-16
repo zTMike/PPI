@@ -100,9 +100,8 @@ class Menu(QMainWindow):
         # Activar Barra De herramientas
         self.barraHerramientas.actionTriggered[QAction].connect(self.accion_barraDeHerramientas)
 
-        self.formulario = QFormLayout()
 
-        self.interna.setLayout(self.formulario)
+        self.vertical=QVBoxLayout()
 
         self.letrero1 = QLabel()
         self.letrero1.setText("Menú Basico")
@@ -110,8 +109,8 @@ class Menu(QMainWindow):
         self.letrero1.setFont(QFont("league spartan", 29))
         self.letrero1.setAlignment(Qt.AlignCenter)
 
-        self.letrero1.setStyleSheet("background: rgba(76, 175, 80, 0.0); margin-bottom:80px; margin-top:90px;font-weight: bold")
-        self.formulario.addRow(self.letrero1)
+        self.letrero1.setStyleSheet("background: rgba(76, 175, 80, 0.0); margin-bottom:80px; margin-top:50px;font-weight: bold")
+        self.vertical.addWidget(self.letrero1)
 
         self.letrero2 = QLabel()
 
@@ -121,15 +120,11 @@ class Menu(QMainWindow):
         self.letrero2.setAlignment(Qt.AlignCenter)
 
         self.letrero2.setStyleSheet(
-            "background: rgba(76, 175, 80, 0.0); opacity:0.6; color:black; margin-bottom:30px;font-weight: bold")
-        self.formulario.addRow(self.letrero2)
+            "background: rgba(76, 175, 80, 0.0); opacity:0.6; color:black; margin-bottom:50px;font-weight: bold")
+        self.vertical.addWidget(self.letrero2)
 
-
-        #texto antes de boton Creado 1 vez
-        self.usuario = QLabel("")
-        self.usuario.setStyleSheet("background: rgba(76, 175, 80, 0.0);margin-left:240px;font-weight: bold")
-        self.usuario.setFont(QFont("league spartan", 12))
-
+        self.formulario = QFormLayout()
+        self.formulario.setContentsMargins(170, 0, 0, 0)
         # Caja de modulos #1
         # Boton Pestaña Registro Vehiculo
         self.botonRegistroVehiculo = QPushButton("Registro Vehículo")
@@ -137,7 +132,7 @@ class Menu(QMainWindow):
         self.botonRegistroVehiculo.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-        self.formulario.addRow(self.usuario, self.botonRegistroVehiculo)
+
 
         # Caja de modulos #2
         # Boton Pestaña Registro Clientes
@@ -146,7 +141,7 @@ class Menu(QMainWindow):
         self.botonRegistroClientes.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-        self.formulario.addRow(self.usuario, self.botonRegistroClientes)
+        self.formulario.addRow(self.botonRegistroVehiculo, self.botonRegistroClientes)
 
         # Caja de modulos #3
         # Boton Pestaña Registro de Entrada
@@ -155,7 +150,7 @@ class Menu(QMainWindow):
         self.botonRegistroEntrada.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-        self.formulario.addRow(self.usuario, self.botonRegistroEntrada)
+
 
         # Caja de modulos #4
         # Boton Pestaña Registro de Salida
@@ -164,7 +159,12 @@ class Menu(QMainWindow):
         self.botonRegistroSalida.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                                        "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-        self.formulario.addRow(self.usuario, self.botonRegistroSalida)
+        self.formulario.addRow(self.botonRegistroEntrada, self.botonRegistroSalida)
+
+        self.vertical.addLayout(self.formulario)
+
+        self.horizontal=QHBoxLayout()
+        self.horizontal.setContentsMargins(10, 0, 0, 0)
 
         # Caja de modulos #5
         # Boton Pestaña Registrar PQRS
@@ -172,8 +172,10 @@ class Menu(QMainWindow):
         self.botonRegistrarPQRS.setFixedWidth(170)
         self.botonRegistrarPQRS.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.horizontal.addWidget(self.botonRegistrarPQRS)
+        self.vertical.addLayout(self.horizontal)
+        self.vertical.addSpacing(300)
 
-        self.formulario.addRow(self.usuario, self.botonRegistrarPQRS)
 
 
 
@@ -188,7 +190,7 @@ class Menu(QMainWindow):
 
 
 
-        self.fondo.setLayout(self.formulario)
+        self.fondo.setLayout(self.vertical)
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_F1:

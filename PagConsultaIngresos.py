@@ -256,12 +256,11 @@ class VentanaCI(QMainWindow):
         for u in self.ingresos:
             self.fechaplanostr = datetime.datetime.strptime(u.fecha, '%d/%m/%Y')
             print(self.fechaplanostr)
-            if self.FechaITextstr<=self.fechaplanostr:
+            if self.FechaITextstr <= self.fechaplanostr <= self.FechafTextstr:
                 contador=contador+1
 
         self.numeroingresos = contador
         self.contador = 0
-        print(contador)
 
         self.scrollArea = QScrollArea()
         self.scrollArea.setWidgetResizable(True)
@@ -294,15 +293,19 @@ class VentanaCI(QMainWindow):
         contador = 0
         for u in self.ingresos:
 
-            if self.fechaplanostr>=self.FechaITextstr and self.fechaplanostr<=self.FechafTextstr:
+            if self.FechaITextstr <= self.fechaplanostr <= self.FechafTextstr:
+                print("Hola")
                 self.tabla.setItem(self.contador, 0, QTableWidgetItem(u.idingreso))
                 self.tabla.setItem(self.contador, 1, QTableWidgetItem(u.documento))
                 self.tabla.setItem(self.contador, 2, QTableWidgetItem(u.fecha))
                 self.tabla.setItem(self.contador, 3, QTableWidgetItem(u.horas))
                 self.tabla.setItem(self.contador, 4, QTableWidgetItem("$"+u.ingreso.strip()))
-
-
-
+                for i in range(self.tabla.columnCount()):
+                    item = self.tabla.item(self.contador, i)
+                    if item is not None:
+                        item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+                        item.setFlags(item.flags() & ~Qt.ItemIsEditable)  # remove the ItemIsEditable flag
+                self.contador += 1
 
         self.tabla.sortItems(2)
 

@@ -94,9 +94,10 @@ class VentanaQr(QMainWindow):
         # Activar Barra De herramientas
         self.barraHerramientas.actionTriggered[QAction].connect(self.accion_barraDeHerramientas)
 
-        self.formulario = QFormLayout()
 
-        self.interna.setLayout(self.formulario)
+        self.vertical1=QVBoxLayout()
+
+        self.formulario = QFormLayout()
 
         self.letrero1 = QLabel()
         self.letrero1.setText("Quejas y Reclamos")
@@ -256,44 +257,44 @@ class VentanaQr(QMainWindow):
 
         self.formulario.addRow(self.fechacierre, self.fechacierreText)
 
+        self.vertical1.addLayout(self.formulario)
 
-
+        self.formulario1=QFormLayout()
+        self.formulario1.setContentsMargins(160,0,0,0)
         #Linea Separadora
         self.formulario.addRow(self.letrero2)
 
         self.botonGuardar = QPushButton("Guardar")
         self.botonGuardar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonGuardar)
         self.botonGuardar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
         self.botonConsultar = QPushButton("Consultar")
         self.botonConsultar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonConsultar)
         self.botonConsultar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
+        self.formulario1.addRow(self.botonGuardar,self.botonConsultar)
+
         self.botonActualizar = QPushButton("Actualizar")
         self.botonActualizar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonActualizar)
+
         self.botonActualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                            "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
         self.botonlimpiar = QPushButton("Limpiar")
         self.botonlimpiar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonlimpiar)
         self.botonlimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.formulario1.addRow(self.botonActualizar, self.botonlimpiar)
 
         self.botonGuardar.clicked.connect(self.accion_botonGuardar)
-
         self.botonConsultar.clicked.connect(self.accion_botonConsultar)
-
         self.botonlimpiar.clicked.connect(self.accion_botonlimpiar)
 
+        self.vertical1.addLayout(self.formulario1)
 
-
-        self.fondo.setLayout(self.formulario)
+        self.fondo.setLayout(self.vertical1)
 
         # ________________Ventana emergente___________
         # creamos ventana de dialogo

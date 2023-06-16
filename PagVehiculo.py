@@ -94,10 +94,9 @@ class VentanaRv(QMainWindow):
         # Activar Barra De herramientas
         self.barraHerramientas.actionTriggered[QAction].connect(self.accion_barraDeHerramientas)
 
+        self.vertical=QVBoxLayout()
+
         self.formulario = QFormLayout()
-
-        self.interna.setLayout(self.formulario)
-
         self.letrero1 = QLabel()
         self.letrero1.setText("Registro de\n Vehículos")
 
@@ -189,32 +188,24 @@ class VentanaRv(QMainWindow):
         self.formulario.addRow(self.marca, self.marcaText)
 
         self.formulario.addRow(self.letrero2)
+        self.vertical.addLayout(self.formulario)
+
+        self.formulario1=QFormLayout()
+        self.formulario1.setContentsMargins(170,0,0,0)
 
         self.botonGuardar = QPushButton("Guardar")
         self.botonGuardar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonGuardar)
         self.botonGuardar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
         self.botonConsultar = QPushButton("Consultar")
         self.botonConsultar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonConsultar)
         self.botonConsultar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-
-        if Ayudas.Ayuda.TipoUsuario=="Admin":
-
-            self.botonEliminar = QPushButton("Eliminar")
-            self.botonEliminar.setFixedWidth(170)
-            self.formulario.addWidget(self.botonEliminar)
-            self.botonEliminar.setStyleSheet("background-color:White; color:Black; padding:5px;"
-                                             "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-
-            self.botonEliminar.clicked.connect(self.accion_botonEliminar)
+        self.formulario1.addRow(self.botonConsultar, self.botonGuardar)
 
         self.botonActualizar = QPushButton("Actualizar")
         self.botonActualizar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonActualizar)
         self.botonActualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                            "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
         self.botonActualizar.clicked.connect(self.accion_botonActualizar)
@@ -222,9 +213,9 @@ class VentanaRv(QMainWindow):
 
         self.botonLimpiar = QPushButton("Limpiar")
         self.botonLimpiar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonLimpiar)
         self.botonLimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.formulario1.addRow(self.botonActualizar,self.botonLimpiar)
 
 
         self.botonGuardar.clicked.connect(self.accion_botonGuardar)
@@ -233,7 +224,23 @@ class VentanaRv(QMainWindow):
 
         self.botonLimpiar.clicked.connect(self.accion_botonLimpiar)
 
-        self.fondo.setLayout(self.formulario)
+        self.vertical.addLayout(self.formulario1)
+
+        if Ayudas.Ayuda.TipoUsuario=="Admin":
+            self.horizontal=QHBoxLayout()
+            self.botonEliminar = QPushButton("Eliminar")
+            self.botonEliminar.setFixedWidth(170)
+            self.horizontal.addWidget(self.botonEliminar)
+            self.botonEliminar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                             "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+
+            self.botonEliminar.clicked.connect(self.accion_botonEliminar)
+
+            self.vertical.addLayout(self.horizontal)
+        if Ayudas.Ayuda.TipoUsuario == "Admin":
+            self.vertical.addSpacing(155)
+
+        self.fondo.setLayout(self.vertical)
 
         #________________Ventana emergente___________
         #creamos ventana de dialogo

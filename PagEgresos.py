@@ -91,27 +91,26 @@ class VentanaBl(QMainWindow):
         # Activar Barra De herramientas
         self.barraHerramientas.actionTriggered[QAction].connect(self.accion_barraDeHerramientas)
 
-        self.formulario = QFormLayout()
-
-        self.interna.setLayout(self.formulario)
+        self.vertical1=QVBoxLayout()
 
         self.letrero1 = QLabel()
         self.letrero1.setText("Registro de Egreso")
 
-
         self.letrero1.setFont(QFont("league spartan", 29))
         self.letrero1.setAlignment(Qt.AlignCenter)
 
-        self.letrero1.setStyleSheet("background: rgba(76, 175, 80, 0.0); font-weight: bold; margin-bottom:15px;margin-top:50px;")
-        self.formulario.addRow(self.letrero1)
+        self.letrero1.setStyleSheet(
+            "background: rgba(76, 175, 80, 0.0); font-weight: bold; margin-bottom:15px;margin-top:50px;")
+        self.vertical1.addWidget(self.letrero1)
 
+        self.formulario = QFormLayout()
 
         #linea Pendiente intentar realizar
         self.letrero2 = QLabel()
         self.letrero2.setText("                                                                                    ")
         self.letrero1.setFont(QFont("league spartan", 35))
         self.letrero2.setStyleSheet("background: rgba(76, 175, 80, 0.0);color:#EFE718; margin-left:240px;text-decoration: underline ;")
-        self.formulario.addRow(self.letrero2)
+
 
 
         # Caja de modulos #1
@@ -189,38 +188,33 @@ class VentanaBl(QMainWindow):
 
         #Linea Separadora
         self.formulario.addRow(self.letrero2)
+        self.vertical1.addLayout(self.formulario)
 
+        self.formulario1=QFormLayout()
+        self.formulario1.setContentsMargins(170,0,0,0)
         self.botonGuardar = QPushButton("Guardar")
         self.botonGuardar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonGuardar)
         self.botonGuardar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                         "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
         self.botonConsultar = QPushButton("Consultar")
         self.botonConsultar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonConsultar)
         self.botonConsultar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                           "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
-
+        self.formulario1.addRow(self.botonGuardar,self.botonConsultar)
         self.botonactualizar = QPushButton("Actualizar")
         self.botonactualizar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonactualizar)
         self.botonactualizar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                            "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
         self.botoneliminar = QPushButton("Eliminar")
         self.botoneliminar.setFixedWidth(170)
-        self.formulario.addWidget(self.botoneliminar)
         self.botoneliminar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.formulario1.addRow(self.botonactualizar, self.botoneliminar)
 
-        self.botonlimpiar = QPushButton("Limpiar")
-        self.botonlimpiar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonlimpiar)
-        self.botonlimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
-                                        "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
-        self.botonlimpiar.clicked.connect(self.accion_botonlimpiar)
+
 
         self.botonGuardar.clicked.connect(self.accion_botonGuardar)
 
@@ -229,10 +223,18 @@ class VentanaBl(QMainWindow):
         self.botonactualizar.clicked.connect(self.accion_botonactualizar)
 
         self.botoneliminar.clicked.connect(self.accion_botoneliminar)
+        self.vertical1.addLayout(self.formulario1)
 
-
-
-        self.fondo.setLayout(self.formulario)
+        self.horizontal=QHBoxLayout()
+        self.botonlimpiar = QPushButton("Limpiar")
+        self.botonlimpiar.setFixedWidth(170)
+        self.botonlimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                        "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.botonlimpiar.clicked.connect(self.accion_botonlimpiar)
+        self.horizontal.addWidget(self.botonlimpiar)
+        self.vertical1.addLayout(self.horizontal)
+        self.vertical1.addSpacing(200)
+        self.fondo.setLayout(self.vertical1)
 
         # ________________Ventana emergente___________
         # creamos ventana de dialogo

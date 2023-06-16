@@ -97,33 +97,27 @@ class VentanaRi(QMainWindow):
 
         self.accion_ocupacion()
         self.vertical=QVBoxLayout()
+
         self.vertical1=QVBoxLayout()
-        self.vertical1.setContentsMargins(400,0,0,-50)
-
-
-
-        
-        
+        self.vertical1.addSpacing(30)
+        self.vertical1.setContentsMargins(400,0,0,0)
         self.letreroocuopado = QLabel()
         self.letreroocuopado.setText("La cantidad de celdas ocupadas: "+str(self.cceldaocupada))
         self.letreroocuopado.setFont(QFont("league spartan", 11))
         self.letreroocuopado.setStyleSheet("background: rgba(76, 175, 80, 0.0);font-weight: bold")
         self.vertical1.addWidget(self.letreroocuopado)
-        
-        
-        
-        
+
         self.letrerodisponible=QLabel()
         self.letrerodisponible = QLabel()
         self.letrerodisponible.setText("La cantidad de celdas disponibles: "+str(self.cceldavacia))
         self.letrerodisponible.setFont(QFont("league spartan", 11))
         self.letrerodisponible.setStyleSheet("background: rgba(76, 175, 80, 0.0);font-weight: bold")
         self.vertical1.addWidget(self.letrerodisponible)
-        
+        self.vertical1.addSpacing(35)
         self.vertical.addLayout(self.vertical1)
 
         self.formulario = QFormLayout()
-        self.formulario.setContentsMargins(0,0,0,150)
+        self.formulario.setContentsMargins(0,0,0,0)
 
         self.letrero1 = QLabel()
         self.letrero1.setText("Registro de Entrada")
@@ -253,33 +247,42 @@ class VentanaRi(QMainWindow):
 
         #Linea Separadora
         self.formulario.addRow(self.letrero2)
+        self.vertical.addLayout(self.formulario)
+
+        self.formulario1=QFormLayout()
+        self.formulario1.setContentsMargins(170,0,0,0)
 
         self.botonGuardar = QPushButton("Guardar")
         self.botonGuardar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonGuardar)
         self.botonGuardar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
 
         self.botonConsultar = QPushButton("Consultar")
         self.botonConsultar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonConsultar)
         self.botonConsultar.setStyleSheet("background-color:White; color:Black; padding:5px;"
                                          "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.formulario1.addRow(self.botonGuardar,self.botonConsultar)
 
-        self.botonLimpiar = QPushButton("Limpiar")
-        self.botonLimpiar.setFixedWidth(170)
-        self.formulario.addWidget(self.botonLimpiar)
-        self.botonLimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
-                                         "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+
 
         self.botonGuardar.clicked.connect(self.accion_botonGuardar)
 
         self.botonConsultar.clicked.connect(self.accion_botonConsultar)
 
+
+
+        self.vertical.addLayout(self.formulario1)
+
+        self.horizontal=QHBoxLayout()
+        self.botonLimpiar = QPushButton("Limpiar")
+        self.botonLimpiar.setFixedWidth(170)
+        self.botonLimpiar.setStyleSheet("background-color:White; color:Black; padding:5px;"
+                                        "border:solid; border-width:1px; border-color:#EFE718;font-weight: bold")
+        self.horizontal.addWidget(self.botonLimpiar)
         self.botonLimpiar.clicked.connect(self.accion_botonLimpiar)
+        self.vertical.addLayout(self.horizontal)
 
-        self.vertical.addLayout(self.formulario)
-
+        self.vertical.addSpacing(180)
         self.fondo.setLayout(self.vertical)
 
         # ________________Ventana emergente___________

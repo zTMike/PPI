@@ -244,17 +244,15 @@ class VentanaCe(QMainWindow):
             self.egresos.append(u)
         self.file.close()
 
-        self.FechaIText1 = int(self.FechaIText.text().replace('/', ''))
-
-        self.FechafText1 = int(self.FechafText.text().replace('/', ''))
+        self.FechafTextstr = datetime.datetime.strptime(self.FechafText.text(), '%d/%m/%Y')
+        self.FechaITextstr = datetime.datetime.strptime(self.FechaIText.text(), '%d/%m/%Y')
 
         contador=0
         for u in self.egresos:
-            self.fechaplano = u.fecha
-            self.fechaplano = int(self.fechaplano.replace('/', ''))
-
-            if self.fechaplano >= self.FechaIText1 and self.fechaplano <= self.FechafText1:
-                contador=contador+1
+            self.fechaplanostr = datetime.datetime.strptime(u.fecha, '%d/%m/%Y')
+            print(self.fechaplanostr)
+            if self.FechaITextstr <= self.fechaplanostr <= self.FechafTextstr:
+                contador = contador + 1
 
         self.numeroingresos = contador
         self.contador = 0
@@ -282,20 +280,15 @@ class VentanaCe(QMainWindow):
 
         self.tabla.setRowCount(self.numeroingresos)
 
-        self.FechaIText1 = int(self.FechaIText.text().replace('/', ''))
+        self.FechafTextstr = datetime.datetime.strptime(self.FechafText.text(), '%d/%m/%Y')
+        self.FechaITextstr = datetime.datetime.strptime(self.FechaIText.text(), '%d/%m/%Y')
+        self.fechaplanostr = datetime.datetime.strptime(u.fecha, '%d/%m/%Y')
 
-        self.FechafText1 = int(self.FechafText.text().replace('/', ''))
-
-
+        contador = 0
         for u in self.egresos:
-            self.fechaplano=u.fecha
-            self.fechaplano= int(self.fechaplano.replace('/', ''))
-            print(self.fechaplano)
-            print(self.FechaIText1)
-            print(self.FechafText1)
 
+            if self.FechaITextstr <= self.fechaplanostr <= self.FechafTextstr:
 
-            if self.fechaplano>=self.FechaIText1 and self.fechaplano<=self.FechafText1:
                 self.tabla.setItem(self.contador, 0, QTableWidgetItem(u.idegreso))
                 self.tabla.setItem(self.contador, 1, QTableWidgetItem(u.fecha))
                 self.tabla.setItem(self.contador, 2, QTableWidgetItem(u.descripcion))
