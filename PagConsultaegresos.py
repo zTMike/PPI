@@ -8,13 +8,10 @@ from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QDesktopWidget, 
 from PyQt5 import QtCore
 
 import Ayudas
-from DatosConsultaIngresos import Consulta
+from DatosEgreso import Egreso
 
 
-
-
-
-class VentanaCI(QMainWindow):
+class VentanaCe(QMainWindow):
     def __init__(self, anterior):
         super().__init__()
         self.vetanaAnterior = anterior
@@ -102,7 +99,7 @@ class VentanaCI(QMainWindow):
         self.interna.setLayout(self.formulario)
 
         self.letrero1 = QLabel()
-        self.letrero1.setText("Consulta de ingresos")
+        self.letrero1.setText("Consulta de egresos")
 
         self.letrero1.setFont(QFont("league spartan", 29))
         self.letrero1.setAlignment(Qt.AlignCenter)
@@ -227,8 +224,8 @@ class VentanaCI(QMainWindow):
         self.FechaI.deleteLater()
         self.botonLimpiar.deleteLater()
 
-        self.file = open('Datos/Datos_ingresos.txt', 'rb')
-        self.ingresos = []
+        self.file = open('Datos/Datos_Egreso.txt', 'rb')
+        self.egresos = []
 
         while self.file:
             linea = self.file.readline().decode('UTF-8')
@@ -237,38 +234,38 @@ class VentanaCI(QMainWindow):
             if linea == '':
                 break
 
-            u = Consulta(
+            u = Egreso(
                 lista[0],
                 lista[1],
                 lista[2],
                 lista[3],
-                lista[4],
             )
 
-            self.ingresos.append(u)
+            self.egresos.append(u)
         self.file.close()
 
-        self.FechafTextstr = datetime.datetime.strptime(self.FechafText.text(), '%d/%m/%Y')
-        self.FechaITextstr = datetime.datetime.strptime(self.FechaIText.text(), '%d/%m/%Y')
+        self.FechaIText1 = int(self.FechaIText.text().replace('/', ''))
 
-        print(self.FechafTextstr)
+        self.FechafText1 = int(self.FechafText.text().replace('/', ''))
+
         contador=0
-        for u in self.ingresos:
-            self.fechaplanostr = datetime.datetime.strptime(u.fecha, '%d/%m/%Y')
-            print(self.fechaplanostr)
-            if self.FechaITextstr<=self.fechaplanostr:
+        for u in self.egresos:
+            self.fechaplano = u.fecha
+            self.fechaplano = int(self.fechaplano.replace('/', ''))
+
+            if self.fechaplano >= self.FechaIText1 and self.fechaplano <= self.FechafText1:
                 contador=contador+1
 
         self.numeroingresos = contador
         self.contador = 0
-        print(contador)
+
 
         self.scrollArea = QScrollArea()
         self.scrollArea.setWidgetResizable(True)
 
         # para crear la tabla para que se vean de forma tabular
         self.tabla = QTableWidget()
-        self.tabla.setColumnCount(5)
+        self.tabla.setColumnCount(4)
 
         # definimos los numeros de colimnas que tendra la tabla
 
@@ -277,31 +274,36 @@ class VentanaCI(QMainWindow):
         self.tabla.setColumnWidth(2, 100)
         self.tabla.setColumnWidth(3, 80)
         self.tabla.setColumnWidth(4, 200)
-        self.tabla.setHorizontalHeaderLabels(["ID Ingreso",
-                                              "Dcoumento Cliente",
-                                              "Fecha del ingreso",
-                                              "Horas",
-                                              "Total A pagar"
+        self.tabla.setHorizontalHeaderLabels(["ID egreso",
+                                              "Fecha",
+                                              "Descripcion",
+                                              "Valor"
                                               ])
 
         self.tabla.setRowCount(self.numeroingresos)
 
-        self.FechafTextstr = datetime.datetime.strptime(self.FechafText.text(), '%d/%m/%Y')
-        self.FechaITextstr = datetime.datetime.strptime(self.FechaIText.text(), '%d/%m/%Y')
-        self.fechaplanostr = datetime.datetime.strptime(u.fecha, '%d/%m/%Y')
+        self.FechaIText1 = int(self.FechaIText.text().replace('/', ''))
+
+        self.FechafText1 = int(self.FechafText.text().replace('/', ''))
 
 
-        contador = 0
-        for u in self.ingresos:
-
-            if self.fechaplanostr>=self.FechaITextstr and self.fechaplanostr<=self.FechafTextstr:
-                self.tabla.setItem(self.contador, 0, QTableWidgetItem(u.idingreso))
-                self.tabla.setItem(self.contador, 1, QTableWidgetItem(u.documento))
-                self.tabla.setItem(self.contador, 2, QTableWidgetItem(u.fecha))
-                self.tabla.setItem(self.contador, 3, QTableWidgetItem(u.horas))
-                self.tabla.setItem(self.contador, 4, QTableWidgetItem("$"+u.ingreso.strip()))
+        for u in self.egresos:
+            self.fechaplano=u.fecha
+            self.fechaplano= int(self.fechaplano.replace('/', ''))
+            print(self.fechaplano)
+            print(self.FechaIText1)
+            print(self.FechafText1)
 
 
+            if self.fechaplano>=self.FechaIText1 and self.fechaplano<=self.FechafText1:
+                self.tabla.setItem(self.contador, 0, QTableWidgetItem(u.idegreso))
+                self.tabla.setItem(self.contador, 1, QTableWidgetItem(u.fecha))
+                self.tabla.setItem(self.contador, 2, QTableWidgetItem(u.descripcion))
+                self.tabla.setItem(self.contador, 3, QTableWidgetItem("$"+u.valor.strip()))
+
+                for i in range(self.tabla.columnCount()):
+                    self.tabla.item(self.contador, i).setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+                self.contador += 1
 
 
         self.tabla.sortItems(2)

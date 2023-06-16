@@ -482,6 +482,7 @@ class VentanaRv(QMainWindow):
                                           + u.modelo + ';'
                                           + u.color + ';'
                                           + u.marca, encoding='UTF-8'))
+
                 self.file.close()
 
                 if existeDocumento:

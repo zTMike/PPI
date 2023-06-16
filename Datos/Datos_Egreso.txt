@@ -1,2 +1,1 @@
-2;13/06/2023;Pago de arreglo;20000
-4;13/06/2023;Pruebas 1;13213
+1;15/06/2023;Pago de nomina carlos;20399
