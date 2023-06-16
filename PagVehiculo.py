@@ -482,7 +482,7 @@ class VentanaRv(QMainWindow):
                     self.file.write(bytes(u.placa + ';'
                                           + u.modelo + ';'
                                           + u.color + ';'
-                                          + u.marca + '\n', encoding='UTF-8'))
+                                          + u.marca , encoding='UTF-8'))
                 self.file.close()
 
                 if existeDocumento:

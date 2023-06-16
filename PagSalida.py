@@ -391,7 +391,7 @@ class VentanaRs(QMainWindow):
         # reescribir el registro del usuario a vacio
 
         for oc in ocupacion:
-            self.file.write(bytes(oc.celda, encoding='UTF-8'))
+            self.file.write(bytes(oc.celda,encoding='UTF-8'))
         self.file.close()
         self.accion_botonLimpiar()
 
